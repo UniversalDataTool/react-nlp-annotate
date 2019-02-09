@@ -46,6 +46,7 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
             }
 
             changeSequence(newSequence)
+            props.onChange(newSequence)
             changeHighlightedItems([])
           }}
         />
@@ -56,7 +57,10 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
           onHighlightedChanged={highlightedItems =>
             changeHighlightedItems(highlightedItems)
           }
-          onSequenceChange={sequence => changeSequence(sequence)}
+          onSequenceChange={sequence => {
+            changeSequence(sequence)
+            props.onChange(sequence)
+          }}
           sequence={sequence}
         />
       </div>
