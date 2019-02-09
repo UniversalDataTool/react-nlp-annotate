@@ -32,10 +32,14 @@ export type TranscriberProps = {
   onChange: string => any
 }
 
-export type NLPAnnotatorProps =
-  | SequenceAnnotatorProps
-  | LabelDocumentProps
-  | TranscriberProps
+export type NLPAnnotatorProps = {
+  ...
+    | $Exact<SequenceAnnotatorProps>
+    | $Exact<LabelDocumentProps>
+    | $Exact<TranscriberProps>,
+  onFinish?: string,
+  onChange?: string
+}
 
 export type Output =
   | {

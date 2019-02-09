@@ -10,7 +10,7 @@ export default ({
   audio
 }: TranscriberProps) => {
   return (
-    <div style={{ border: "1px solid #ccc", padding: 10, borderRadius: 4 }}>
+    <div>
       <div style={{ textAlign: "center", padding: 10 }}>
         <audio controlsList="nodownload" controls>
           <source src={audio} />

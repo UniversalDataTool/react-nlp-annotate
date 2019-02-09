@@ -14,7 +14,7 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
     props.document
   ])
   return (
-    <div style={{ border: "1px solid #ccc", padding: 10, borderRadius: 4 }}>
+    <div>
       <div>
         <LabelSelector
           labels={props.labels}
