@@ -14,22 +14,28 @@ export type LabelDocumentProps = {
   type: "label-document",
   labels: Array<Label>,
   multipleLabels?: boolean,
-  document: string
+  document: string,
+  onChange: (Array<string> | string | null) => any
 }
 
 export type SequenceAnnotatorProps = {
   type: "label-sequence",
   labels: Array<Label>,
-  document: string
+  document: string,
+  onChange: (sequence: Array<SequenceItem>) => any
 }
 
 export type TranscriberProps = {
   type: "transcribe",
   audio: string,
-  initialTranscriptionText?: string
+  initialTranscriptionText?: string,
+  onChange: string => any
 }
 
-export type NLPAnnotatorProps = SequenceAnnotatorProps | TranscriberProps
+export type NLPAnnotatorProps =
+  | SequenceAnnotatorProps
+  | LabelDocumentProps
+  | TranscriberProps
 
 export type Output =
   | {

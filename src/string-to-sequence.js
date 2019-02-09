@@ -13,7 +13,6 @@ const stringToSequence = (doc: string) => {
   } while (m)
   indices = indices.concat([doc.length])
   return indices
-    .slice(0, -1)
     .filter((_, i) => indices[i] !== indices[i + 1])
     .map((_, i) => ({
       text: doc.slice(indices[i], indices[i + 1])

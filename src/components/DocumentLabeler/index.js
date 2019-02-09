@@ -21,7 +21,9 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
           onSelectLabel={(labelId: string) => {
             if (props.multipleLabels) {
               changeSelectedLabels(selectedLabels.concat([labelId]))
+              props.onChange(selectedLabels.concat([labelId]))
             } else {
+              props.onChange(labelId)
               changeSelectedLabels([labelId])
             }
           }}
@@ -38,9 +40,15 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
                 small
                 deletable
                 onClick={(labelId: string) => {
-                  changeSelectedLabels(
-                    selectedLabels.filter(l => l !== labelId)
+                  const newSelectedLabels = selectedLabels.filter(
+                    l => l !== labelId
                   )
+                  changeSelectedLabels(newSelectedLabels)
+                  if (props.multipleLabels) {
+                    props.onChange(newSelectedLabels)
+                  } else {
+                    props.onChange(null)
+                  }
                 }}
               />
             )
