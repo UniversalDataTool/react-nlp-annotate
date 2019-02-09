@@ -3,7 +3,7 @@
 const stringToSequence = (doc: string) => {
   const sepRe = /[a-zA-Z]+/g
   let m
-  let indices = []
+  let indices = [0]
   do {
     m = sepRe.exec(doc)
     if (m) {

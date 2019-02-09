@@ -50,7 +50,7 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
           }}
         />
       </div>
-      <div>
+      <div style={{ borderTop: "1px solid #ccc", marginTop: 8, paddingTop: 4 }}>
         <Document
           nothingHighlighted={highlightedItems.length === 0}
           onHighlightedChanged={highlightedItems =>

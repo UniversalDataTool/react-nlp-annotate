@@ -13,6 +13,7 @@ export type Label = {
 export type LabelDocumentProps = {
   type: "label-document",
   labels: Array<Label>,
+  multipleLabels?: boolean,
   document: string
 }
 

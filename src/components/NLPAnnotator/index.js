@@ -2,31 +2,16 @@
 
 import React, { useState } from "react"
 
-import type { Props } from "../../types"
-import Document from "../Document"
+import type { NLPAnnotatorProps } from "../../types"
+import SequenceAnnotator from "../SequenceAnnotator"
 
 const getInitialSequence = (doc: string) => {
   doc.match
 }
 
-export default function NLPAnnotator(props: Props) {
-  const [highlightedItems, changeHighlightedItems] = useState([])
-  const [sequence, changeSequence] = useState(
-    getInitialSequence(props.document)
-  )
-
-  return (
-    <div>
-      <div />
-      <div>
-        <Document
-          onHighlightedChanged={highlightedItems =>
-            changeHighlightedItems(highlightedItems)
-          }
-          onSequenceChange={sequence => changeSequence(sequence)}
-          sequence={props.sequence}
-        />
-      </div>
-    </div>
-  )
+export default function NLPAnnotator(props: NLPAnnotatorProps) {
+  if (props.type === "label-sequence") {
+    return <SequenceAnnotator {...props} />
+  }
+  return null
 }
