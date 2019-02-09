@@ -10,15 +10,15 @@ const useStyles = makeStyles({})
 type Props = {
   sequence: Array<SequenceItem>,
   canModifySequence?: boolean,
-  onSequenceChange: (Array<SequenceItem>) => any,
-  onHighlightedChanged: (Array<number>) => any,
+  onSequenceChange?: (Array<SequenceItem>) => any,
+  onHighlightedChanged?: (Array<number>) => any,
   nothingHighlighted?: boolean
 }
 
 export default function Document({
   sequence,
-  onHighlightedChanged,
-  onSequenceChange,
+  onHighlightedChanged = () => null,
+  onSequenceChange = () => null,
   nothingHighlighted
 }: Props) {
   const [mouseDown, changeMouseDown] = useState()
@@ -45,9 +45,7 @@ export default function Document({
   return (
     <div
       onMouseDown={() => changeMouseDown(true)}
-      onMouseUp={() => {
-        changeMouseDown(false)
-      }}
+      onMouseUp={() => changeMouseDown(false)}
     >
       {sequence.map((seq, i) => (
         <>

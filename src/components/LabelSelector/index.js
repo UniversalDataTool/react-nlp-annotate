@@ -2,31 +2,7 @@
 
 import React, { useState, useLayoutEffect } from "react"
 import type { Label as LabelType } from "../../types.js"
-import makeStyles from "@material-ui/styles/makeStyles"
-import FolderOpenIcon from "@material-ui/icons/FolderOpen"
-import classnames from "classnames"
-
-const useStyles = makeStyles({
-  label: {
-    display: "inline-flex",
-    cursor: "pointer",
-    padding: 8,
-    paddingLeft: 12,
-    paddingRight: 12,
-    margin: 4,
-    borderRadius: 4,
-    fontSize: 18,
-    color: "#fff",
-    alignItems: "center",
-    "&:hover": {
-      opacity: 0.6
-    },
-    "&.small": {
-      fontSize: 12,
-      fontWeight: "bold"
-    }
-  }
-})
+import LabelButton from "../LabelButton"
 
 const findRouteFromParents = (labelId, labels) => {
   if (!labelId) return []
@@ -35,37 +11,6 @@ const findRouteFromParents = (labelId, labels) => {
     return findRouteFromParents(label.parent, labels).concat([labelId])
   }
   return [labelId]
-}
-
-const Label = (props: {
-  ...$Exact<LabelType>,
-  hasChildren?: boolean,
-  small?: boolean,
-  hotkey?: string,
-  onClick: string => any
-}) => {
-  const { parent, color, displayName, id, small, hasChildren, hotkey } = props
-  const classes = useStyles()
-
-  return (
-    <div
-      onClick={() => props.onClick(id)}
-      className={classnames(classes.label, small && "small")}
-      style={{ backgroundColor: color }}
-    >
-      {hasChildren && (
-        <FolderOpenIcon
-          style={{
-            width: small ? 12 : 20,
-            height: small ? 12 : 20,
-            marginRight: small ? 3 : 6
-          }}
-        />
-      )}
-      <div>{displayName || id}</div>
-      {hotkey && <div style={{ paddingLeft: 4 }}>({hotkey})</div>}
-    </div>
-  )
 }
 
 export default ({
@@ -118,7 +63,7 @@ export default ({
     <div>
       {labels.some(l => l.parent) && (
         <div style={{ alignItems: "center", display: "flex" }}>
-          <Label
+          <LabelButton
             small
             color={parents.length > 0 ? "#333" : "#ccc"}
             displayName="Root (r)"
@@ -133,7 +78,7 @@ export default ({
               hasChildren: labels.some(l2 => l2.parent === l.id)
             }))
             .map((l, i) => (
-              <Label
+              <LabelButton
                 small
                 key={i}
                 {...l}
@@ -153,7 +98,7 @@ export default ({
             hasChildren: labels.some(l2 => l2.parent === l.id)
           }))
           .map((l, i) => (
-            <Label
+            <LabelButton
               key={i}
               {...l}
               hotkey={labelHotkeyMap[l.id]}
