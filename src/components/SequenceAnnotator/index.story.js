@@ -25,6 +25,31 @@ storiesOf("SequenceAnnotator", module)
           displayName: "Proper Noun"
         }
       ]}
+      onChange={action("onChange")}
+    />
+  ))
+  .add("Initial Content", () => (
+    <SequenceAnnotator
+      type="label-sequence"
+      document={`Lorem ipsum dolor.`}
+      initialSequence={[
+        { label: "noun", text: "Lorem" },
+        { text: " ipsum " },
+        { label: "proper-noun", text: "dolor." }
+      ]}
+      labels={[
+        {
+          color: colors[0],
+          id: "noun",
+          displayName: "Noun"
+        },
+        {
+          color: colors[1],
+          id: "proper-noun",
+          displayName: "Proper Noun"
+        }
+      ]}
+      onChange={action("onChange")}
     />
   ))
   .add("Basic Nested Labels", () => (
@@ -85,5 +110,6 @@ storiesOf("SequenceAnnotator", module)
           parent: "subject"
         }
       ]}
+      onChange={action("onChange")}
     />
   ))

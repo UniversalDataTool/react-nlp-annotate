@@ -12,14 +12,16 @@ type Props = {
   canModifySequence?: boolean,
   onSequenceChange?: (Array<SequenceItem>) => any,
   onHighlightedChanged?: (Array<number>) => any,
-  nothingHighlighted?: boolean
+  nothingHighlighted?: boolean,
+  colorLabelMap?: Object
 }
 
 export default function Document({
   sequence,
   onHighlightedChanged = () => null,
   onSequenceChange = () => null,
-  nothingHighlighted
+  nothingHighlighted,
+  colorLabelMap = {}
 }: Props) {
   const [mouseDown, changeMouseDown] = useState()
   const [[firstSelected, lastSelected], changeHighlightedRangeState] = useState(
@@ -67,7 +69,8 @@ export default function Document({
               seq.label
                 ? {
                     display: "inline-flex",
-                    backgroundColor: seq.color || "#333",
+                    backgroundColor:
+                      seq.color || colorLabelMap[seq.label] || "#333",
                     color: "#fff",
                     padding: 4,
                     margin: 4,
@@ -99,9 +102,9 @@ export default function Document({
               <div
                 onClick={() => {
                   onSequenceChange(
-                    sequence.flatMap(s =>
-                      s !== seq ? s : stringToSequence(s.text)
-                    )
+                    sequence
+                      .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
+                      .filter(s => s.text.length > 0)
                   )
                 }}
                 style={{

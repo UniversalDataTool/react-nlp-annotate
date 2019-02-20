@@ -17,6 +17,7 @@ const stringToSequence = (doc: string) => {
     .map((_, i) => ({
       text: doc.slice(indices[i], indices[i + 1])
     }))
+    .filter(s => s.text.length > 0)
 }
 
 export default stringToSequence

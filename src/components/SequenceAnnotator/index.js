@@ -1,17 +1,28 @@
 // @flow
 
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 
 import type { SequenceAnnotatorProps } from "../../types"
 import Document from "../Document"
 import LabelSelector from "../LabelSelector"
 import stringToSequence from "../../string-to-sequence.js"
+import mergeSequence from "../../merge-sequence.js"
+import colors from "../../colors"
 
 export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
   const [highlightedItems, changeHighlightedItems] = useState([])
-  const [sequence, changeSequence] = useState(() =>
-    stringToSequence(props.document)
+  const [sequence, changeSequence] = useState(
+    () => props.initialSequence || stringToSequence(props.document)
   )
+  const colorLabelMap = useMemo(
+    () =>
+      props.labels.reduce(
+        (acc, l, i) => ((acc[l.id] = colors[i % colors.length]), acc),
+        {}
+      ),
+    [props.labels]
+  )
+
   return (
     <div>
       <div>
@@ -46,20 +57,21 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
             }
 
             changeSequence(newSequence)
-            props.onChange(newSequence)
+            props.onChange(mergeSequence(newSequence))
             changeHighlightedItems([])
           }}
         />
       </div>
       <div style={{ borderTop: "1px solid #ccc", marginTop: 8, paddingTop: 5 }}>
         <Document
+          colorLabelMap={colorLabelMap}
           nothingHighlighted={highlightedItems.length === 0}
           onHighlightedChanged={highlightedItems =>
             changeHighlightedItems(highlightedItems)
           }
           onSequenceChange={sequence => {
             changeSequence(sequence)
-            props.onChange(sequence)
+            props.onChange(mergeSequence(sequence))
           }}
           sequence={sequence}
         />

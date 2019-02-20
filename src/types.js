@@ -21,6 +21,7 @@ export type LabelDocumentProps = {
 export type SequenceAnnotatorProps = {
   type: "label-sequence",
   labels: Array<Label>,
+  initialSequence?: Array<SequenceItem>,
   document: string,
   onChange: (sequence: Array<SequenceItem>) => any
 }
