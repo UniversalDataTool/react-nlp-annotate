@@ -29,6 +29,8 @@ export type SequenceAnnotatorProps = {
 export type TranscriberProps = {
   type: "transcribe",
   audio: string,
+  phraseBank?: Array<string>,
+  validator?: string => Array<string>,
   initialTranscriptionText?: string,
   onChange: string => any
 }
