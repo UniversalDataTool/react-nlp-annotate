@@ -104,14 +104,19 @@ export default function EditableDocument({
   }
 
   const loadOptions = async text => {
+    let bestOption
     text = text.toLowerCase()
     const scRes = spellChecker.lookup(text)
     if (scRes.found || phraseBank.includes(text))
       return [createOption(text, green[500])]
 
     const possiblePhrases = phraseBank.filter(p => p.startsWith(text))
-    return [createOption(text, yellow[700])]
-      .concat(possiblePhrases.map(p => createOption(p, green[500])))
+    return [bestOption || createOption(text, yellow[700])]
+      .concat(
+        possiblePhrases
+          .filter(p => p !== text)
+          .map(p => createOption(p, green[500]))
+      )
       .concat(
         scRes.suggestions
           .slice(0, 6)
