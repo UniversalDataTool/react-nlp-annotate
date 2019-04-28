@@ -10,20 +10,23 @@ import colors from "../../colors"
 import { green } from "@material-ui/core/colors"
 import makeStyles from "@material-ui/styles/makeStyles"
 import Container from "../Container"
+import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles({
   finishButton: {
-    display: "inline-block",
-    fontSize: 14,
-    backgroundColor: green[500],
-    padding: 10,
-    color: "#fff",
-    margin: 10,
-    borderRadius: 4,
-    fontWeight: "bold",
-    "&:hover": {
-      opacity: 0.7,
-      cursor: "pointer"
+    "&&": {
+      fontSize: 14,
+      textTransform: "none",
+      backgroundColor: green[500],
+      padding: 10,
+      color: "#fff",
+      margin: 10,
+      borderRadius: 4,
+      fontWeight: "bold",
+      "&:hover": {
+        opacity: 0.7,
+        cursor: "pointer"
+      }
     }
   }
 })
@@ -53,14 +56,21 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
       output = []
     }
     finishButton = (
-      <div
+      <Button
+        disabled={
+          props.validator &&
+          (props: any)
+            .validator(output)
+            .some(msg => msg.toLowerCase().includes("error:"))
+        }
         onClick={() => {
+          console.log(output, (props: any).validator(output))
           props.onFinish(output)
         }}
         className={classes.finishButton}
       >
         Complete
-      </div>
+      </Button>
     )
   }
   if (props.type === "label-sequence") {

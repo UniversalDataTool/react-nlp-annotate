@@ -36,7 +36,6 @@ storiesOf("Transcriber", module)
           errors.push(
             "Warning: Use [unintelligible] only when the words absolutely cannot be understood. Most of the time you should remove [unintelligible] and take your best guess!"
           )
-        console.log({ errors })
         return errors
       }}
       initialTranscriptionText="Lorem ipsum dolor."
