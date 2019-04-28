@@ -21,11 +21,9 @@ const useStyles = makeStyles({
       padding: 10,
       color: "#fff",
       margin: 10,
-      borderRadius: 4,
       fontWeight: "bold",
       "&:hover": {
-        opacity: 0.7,
-        cursor: "pointer"
+        backgroundColor: green[700]
       }
     }
   }

@@ -80,8 +80,12 @@ export default function EditableDocument({
   onChange: string => any,
   phraseBank?: Array<string>
 }) {
-  const [inputValue, changeInputValue] = useState("")
-  const [value, changeValue] = useState([])
+  const [inputValue, changeInputValue] = useState()
+  const [value, changeValue] = useState(
+    initialText
+      ? [{ value: initialText, label: initialText, color: green[500] }]
+      : []
+  )
   const [validationErrors, changeValidationErrors] = useState([])
 
   const handleChange = v => {
