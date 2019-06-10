@@ -6,6 +6,7 @@ export type SequenceItem = { text: string, label?: LabelId, color?: string }
 export type Label = {
   parent?: string,
   displayName?: string,
+  description?: string,
   color: string,
   id: string
 }

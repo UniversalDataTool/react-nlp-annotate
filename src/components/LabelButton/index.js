@@ -40,6 +40,7 @@ const Label = (props: {
     parent,
     color,
     displayName,
+    description,
     id,
     small,
     hasChildren,
