@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState } from "react"
+import React, { useState, useLayoutEffect } from "react"
 
 import type { NLPAnnotatorProps } from "../../types"
 import SequenceAnnotator from "../SequenceAnnotator"
@@ -32,6 +32,19 @@ const useStyles = makeStyles({
 export default function NLPAnnotator(props: NLPAnnotatorProps) {
   const classes = useStyles()
   let [output, changeOutput] = useState(null)
+
+  useLayoutEffect(() => {
+    const eventFunc = e => {
+      if (e.key === "Enter") {
+        if (props.onFinish) props.onFinish(output)
+      }
+    }
+    window.addEventListener("keydown", eventFunc)
+    return () => {
+      window.removeEventListener("keydown", eventFunc)
+    }
+  })
+
   const onChange = (newOutput: any) => {
     if (props.onChange) props.onChange(newOutput)
     changeOutput(newOutput)
@@ -62,12 +75,11 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
             .some(msg => msg.toLowerCase().includes("error:"))
         }
         onClick={() => {
-          console.log(output, (props: any).validator(output))
           props.onFinish(output)
         }}
         className={classes.finishButton}
       >
-        Complete
+        Complete (enter)
       </Button>
     )
   }

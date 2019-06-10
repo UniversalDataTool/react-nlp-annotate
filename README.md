@@ -1,3 +1,6 @@
-# Training Hub NLP
+# React NLP Annotate
 
-n interface for doing NLP tasks.
+Interface for doing NLP tasks. [Check it out here](https://workaroundonline.github.io/react-nlp-annotate/).
+
+- Audio transcription
+- Text Labeling (Entity, Classification)

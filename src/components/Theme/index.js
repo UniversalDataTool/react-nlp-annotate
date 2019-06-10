@@ -1,16 +1,35 @@
 // @flow
 
 import React from "react"
+import { makeStyles } from "@material-ui/styles"
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme"
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
 import "./theme.css"
 
-export default ({ children }: any) => (
-  <div
-    style={{
-      fontFamily: "'Inter', sans-serif",
-      fontSize: 24,
-      color: "#666"
-    }}
-  >
-    {children}
-  </div>
-)
+const useStyles = makeStyles({
+  container: {
+    fontFamily: '"Inter UI", sans-serif'
+  }
+})
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"Inter UI", "Roboto", sans-serif'
+  },
+  overrides: {
+    MuiButton: {
+      root: {
+        textTransform: "none"
+      }
+    }
+  }
+})
+
+export default ({ children }: any) => {
+  const classes = useStyles()
+  return (
+    <MuiThemeProvider theme={theme}>
+      <div className={classes.container}>{children}</div>
+    </MuiThemeProvider>
+  )
+}
