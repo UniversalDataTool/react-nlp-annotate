@@ -8,7 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles({
   tooltip: {
-    width: 100
+    whiteSpace: "pre-wrap"
   }
 })
 
@@ -68,78 +68,63 @@ export default ({
     }
   })
 
-  const [helpOpen, changeHelpOpen] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      changeHelpOpen(false)
-    }, 500)
-  }, [])
-
   const c = useStyles()
 
   return (
-    <div style={{ flexDirection: "row", display: "flex" }}>
-      <div>
-        <LabelButton
-          color={helpOpen ? "#888" : "#ccc"}
-          displayName="?"
-          id=""
-          onClick={() => changeHelpOpen(!helpOpen)}
-        />
-      </div>
-      <div>
-        {labels.some(l => l.parent) && (
-          <div style={{ alignItems: "center", display: "flex" }}>
-            <LabelButton
-              small
-              color={parents.length > 0 ? "#333" : "#ccc"}
-              displayName="Root (r)"
-              id=""
-              onClick={() => changeParents([])}
-            />
-            {parents
-              .map(p => labels.find(l => l.id === p))
-              .filter(Boolean)
-              .map(l => ({
-                ...l,
-                hasChildren: labels.some(l2 => l2.parent === l.id)
-              }))
-              .map((l, i) => (
-                <Tooltip
-                  open={helpOpen}
-                  classes={{ tooltip: c.tooltip }}
-                  key={i}
-                  title={l.description || "No Description"}
-                  placement="bottom"
-                >
-                  <LabelButton
-                    small
-                    {...l}
-                    hotkey={labelHotkeyMap[l.id]}
-                    onClick={() => {
-                      changeParents(parents.slice(0, parents.indexOf(l.id) + 1))
-                    }}
-                  />
-                </Tooltip>
-              ))}
-          </div>
-        )}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {labels
-            .filter(l => l.parent === currentParent)
+    <div>
+      {labels.some(l => l.parent) && (
+        <div
+          style={{ alignItems: "center", display: "flex", flexWrap: "wrap" }}
+        >
+          <LabelButton
+            small
+            color={parents.length > 0 ? "#333" : "#ccc"}
+            displayName="Root (r)"
+            id=""
+            onClick={() => changeParents([])}
+          />
+          {parents
+            .map(p => labels.find(l => l.id === p))
+            .filter(Boolean)
             .map(l => ({
               ...l,
               hasChildren: labels.some(l2 => l2.parent === l.id)
             }))
             .map((l, i) => (
               <Tooltip
-                open={helpOpen}
+                // open={helpOpen}
                 classes={{ tooltip: c.tooltip }}
                 key={i}
                 title={l.description || "No Description"}
                 placement="bottom"
               >
+                <LabelButton
+                  small
+                  {...l}
+                  hotkey={labelHotkeyMap[l.id]}
+                  onClick={() => {
+                    changeParents(parents.slice(0, parents.indexOf(l.id) + 1))
+                  }}
+                />
+              </Tooltip>
+            ))}
+        </div>
+      )}
+      <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+        {labels
+          .filter(l => l.parent === currentParent)
+          .map(l => ({
+            ...l,
+            hasChildren: labels.some(l2 => l2.parent === l.id)
+          }))
+          .map((l, i) => (
+            <Tooltip
+              key={i}
+              classes={{ tooltip: c.tooltip }}
+              title={l.description || "No Description"}
+              placement="bottom"
+            >
+              <div>
                 <LabelButton
                   {...l}
                   hotkey={labelHotkeyMap[l.id]}
@@ -151,9 +136,9 @@ export default ({
                         }
                   }
                 />
-              </Tooltip>
-            ))}
-        </div>
+              </div>
+            </Tooltip>
+          ))}
       </div>
     </div>
   )
