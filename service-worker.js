@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/react-nlp-annotate/precache-manifest.b9f1d94ce958874fc45fc55f411946df.js"
+  "/react-nlp-annotate/precache-manifest.947951305ce840e21825305becfad360.js"
 );
 
 workbox.clientsClaim();
