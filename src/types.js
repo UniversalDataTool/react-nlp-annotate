@@ -16,6 +16,7 @@ export type LabelDocumentProps = {
   labels: Array<Label>,
   multipleLabels?: boolean,
   document: string,
+  initialLabels?: Array<string>,
   onChange: (Array<string> | string | null) => any
 }
 

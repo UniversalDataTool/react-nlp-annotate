@@ -9,7 +9,9 @@ import stringToSequence from "../../string-to-sequence.js"
 import LabelButton from "../LabelButton"
 
 export default function DocumentLabeler(props: LabelDocumentProps) {
-  const [selectedLabels, changeSelectedLabels] = useState([])
+  const [selectedLabels, changeSelectedLabels] = useState(
+    props.initialLabels || []
+  )
   const sequence = useMemo(() => stringToSequence(props.document), [
     props.document
   ])
