@@ -10,7 +10,7 @@ import LabelButton from "../LabelButton"
 
 export default function DocumentLabeler(props: LabelDocumentProps) {
   const [selectedLabels, changeSelectedLabels] = useState(
-    props.initialLabels || []
+    props.initialLabels || (props.initialLabel ? [props.initialLabel] : [])
   )
   const sequence = useMemo(() => stringToSequence(props.document), [
     props.document
