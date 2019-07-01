@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/react-nlp-annotate/static/js/runtime~main.1185c96a.js"
   },
   {
-    "revision": "0f30be1a77eabc0d4fe4f29a6ccc113b",
+    "revision": "bc8ecfc86c5137717210c0f65ac50bd9",
     "url": "/react-nlp-annotate/index.html"
   }
 ];
