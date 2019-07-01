@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 const loadSavedInput = () => {
   try {
-    return JSON.parse(window.localStorage.getItem("customInput") || "{}")
+    return JSON.parse(window.localStorage.getItem("nlpCustomInput") || "{}")
   } catch (e) {
     return {}
   }
@@ -73,7 +73,11 @@ export const examples = {
   Custom: () => loadSavedInput()
 }
 
-const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
+const Editor = ({
+  initialAnnotatorProps,
+  onOpenAnnotator,
+  lastOutput
+}: any) => {
   const c = useStyles()
   const [currentError, changeCurrentError] = useState()
   const [selectedExample, changeSelectedExample] = useState(
@@ -81,9 +85,11 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
       ? "Custom"
       : "SimpleLabelSequence"
   )
-  const [outputDialogOpen, changeOutputOpen] = useState(false)
+  const [outputDialogOpen, changeOutputOpen] = useState(lastOutput)
   const [currentJSONValue, changeCurrentJSONValue] = useState(
-    JSON.stringify(examples[selectedExample](), null, "  ")
+    initialAnnotatorProps
+      ? JSON.stringify(initialAnnotatorProps, null, "  ")
+      : JSON.stringify(examples[selectedExample](), null, "  ")
   )
   return (
     <div>
@@ -128,8 +134,8 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
             onClick={() =>
               onOpenAnnotator(
                 selectedExample === "Custom"
-                  ? loadSavedInput()
-                  : examples[selectedExample]
+                  ? JSON.parse(currentJSONValue)
+                  : examples[selectedExample]()
               )
             }
           >
