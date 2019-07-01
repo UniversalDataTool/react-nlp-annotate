@@ -64,7 +64,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
       output = props.initialTranscriptionText
     }
     if (output === null && props.type === "label-sequence") {
-      output = []
+      output = [{ text: props.document }]
     }
     finishButton = (
       <Button

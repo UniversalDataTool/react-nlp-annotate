@@ -33,6 +33,7 @@
     "chroma-js": "^2.0.3",
     "flow-bin": "^0.92.1",
     "gh-pages": "^2.0.1",
+    "js-base64": "^2.5.1",
     "query-string": "^6.8.1",
     "react": "16.8.0-alpha.1",
     "react-dom": "16.8.0-alpha.1",

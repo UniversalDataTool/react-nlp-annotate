@@ -81,7 +81,7 @@ const Editor = ({
   const c = useStyles()
   const [currentError, changeCurrentError] = useState()
   const [selectedExample, changeSelectedExample] = useState(
-    window.localStorage.getItem("customInput")
+    window.localStorage.getItem("nlpCustomInput")
       ? "Custom"
       : "SimpleLabelSequence"
   )
@@ -158,7 +158,7 @@ const Editor = ({
             onChange={code => {
               try {
                 window.localStorage.setItem(
-                  "customInput",
+                  "nlpCustomInput",
                   JSON.stringify(JSON.parse(code))
                 )
                 changeCurrentError(null)
