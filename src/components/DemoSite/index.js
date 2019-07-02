@@ -49,15 +49,14 @@ export default () => {
           initialAnnotatorProps={annotatorProps}
           lastOutput={lastOutput}
           onOpenAnnotator={props => {
-            console.log(Base64.encode(JSON.stringify(props, null, "  ")))
-            window.history.pushState(
-              window.document.title,
-              window.document.title,
-              window.location.origin +
-                window.location.pathname +
-                "?load=" +
-                Base64.encode(JSON.stringify(props, null, "  "))
-            )
+            // window.history.pushState(
+            //   window.document.title,
+            //   window.document.title,
+            //   window.location.origin +
+            //     window.location.pathname +
+            //     "?load=" +
+            //     Base64.encode(JSON.stringify(props, null, "  "))
+            // )
             changeAnnotatorProps(props)
             changeAnnotatorOpen(true)
           }}
