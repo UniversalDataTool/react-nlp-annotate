@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import type { SequenceItem } from "../../types"
 import { makeStyles } from "@material-ui/styles"
 import stringToSequence from "../../string-to-sequence.js"
+import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles({})
 
@@ -97,7 +98,13 @@ export default function Document({
             }
             key={i}
           >
-            <div>{seq.text}</div>
+            {seq.label ? (
+              <Tooltip title={seq.label} placement="bottom">
+                <div>{seq.text}</div>
+              </Tooltip>
+            ) : (
+              <div>{seq.text}</div>
+            )}
             {seq.label && (
               <div
                 onClick={() => {

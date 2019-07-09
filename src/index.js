@@ -8,7 +8,7 @@ import DatasetViewer from "./components/DatasetViewer"
 
 ReactDOM.render(
   <Theme>
-    {window.location.pathname.endsWith("/dataset") ? (
+    {window.location.search.includes("load_url") ? (
       <DatasetViewer />
     ) : (
       <DemoSite />
