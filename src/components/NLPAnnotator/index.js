@@ -33,6 +33,13 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   const classes = useStyles()
   let [output, changeOutput] = useState(null)
 
+  if (output === null && props.type === "transcribe") {
+    output = props.initialTranscriptionText
+  }
+  if (output === null && props.type === "label-sequence") {
+    output = [{ text: props.document }]
+  }
+
   useLayoutEffect(() => {
     const eventFunc = e => {
       if (e.key === "Enter") {
@@ -60,12 +67,6 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   }
   let finishButton = null
   if (props.onFinish) {
-    if (output === null && props.type === "transcribe") {
-      output = props.initialTranscriptionText
-    }
-    if (output === null && props.type === "label-sequence") {
-      output = [{ text: props.document }]
-    }
     finishButton = (
       <Button
         disabled={
