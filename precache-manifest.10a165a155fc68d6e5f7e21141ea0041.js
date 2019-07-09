@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "1052e26bd652d543d438",
+    "revision": "e199d21cd3a5911d1746",
     "url": "/react-nlp-annotate/static/css/main.cbeef751.chunk.css"
   },
   {
-    "revision": "1052e26bd652d543d438",
-    "url": "/react-nlp-annotate/static/js/main.1052e26b.chunk.js"
+    "revision": "e199d21cd3a5911d1746",
+    "url": "/react-nlp-annotate/static/js/main.e199d21c.chunk.js"
   },
   {
     "revision": "db7b88eeff863c2fe484",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/react-nlp-annotate/static/js/runtime~main.1185c96a.js"
   },
   {
-    "revision": "4cb2fcbe48e0bfc8f936eec7aaf748fb",
+    "revision": "b608b4e4bf2120469f3ef0f64f875c4f",
     "url": "/react-nlp-annotate/index.html"
   }
 ];
