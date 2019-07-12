@@ -7,7 +7,7 @@ Interface for doing NLP tasks. [Check it out here](https://workaroundonline.gith
 
 ## Installation
 
-`npm install react-nlp-annotate`
+`npm install @material-ui/core chroma-js spelling react-nlp-annotate`
 
 ## Usage
 
