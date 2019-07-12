@@ -1,7 +1,7 @@
 {
   "main.css": "/react-nlp-annotate/static/css/main.cbeef751.chunk.css",
-  "main.js": "/react-nlp-annotate/static/js/main.79a22a89.chunk.js",
-  "main.js.map": "/react-nlp-annotate/static/js/main.79a22a89.chunk.js.map",
+  "main.js": "/react-nlp-annotate/static/js/main.1e88ea36.chunk.js",
+  "main.js.map": "/react-nlp-annotate/static/js/main.1e88ea36.chunk.js.map",
   "static/css/1.e2513e10.chunk.css": "/react-nlp-annotate/static/css/1.e2513e10.chunk.css",
   "static/js/1.e45e93d3.chunk.js": "/react-nlp-annotate/static/js/1.e45e93d3.chunk.js",
   "static/js/1.e45e93d3.chunk.js.map": "/react-nlp-annotate/static/js/1.e45e93d3.chunk.js.map",
@@ -10,6 +10,6 @@
   "static/css/main.cbeef751.chunk.css.map": "/react-nlp-annotate/static/css/main.cbeef751.chunk.css.map",
   "static/css/1.e2513e10.chunk.css.map": "/react-nlp-annotate/static/css/1.e2513e10.chunk.css.map",
   "index.html": "/react-nlp-annotate/index.html",
-  "precache-manifest.a7e56487e4fe78c65fdbd1f3421beae9.js": "/react-nlp-annotate/precache-manifest.a7e56487e4fe78c65fdbd1f3421beae9.js",
+  "precache-manifest.b55552d923241d21598239fc3c70fd2c.js": "/react-nlp-annotate/precache-manifest.b55552d923241d21598239fc3c70fd2c.js",
   "service-worker.js": "/react-nlp-annotate/service-worker.js"
 }
