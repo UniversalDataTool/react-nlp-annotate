@@ -37,7 +37,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     output = props.initialTranscriptionText
   }
   if (output === null && props.type === "label-sequence") {
-    output = [{ text: props.document }]
+    output = props.initialSequence || [{ text: props.document }]
   }
 
   useLayoutEffect(() => {

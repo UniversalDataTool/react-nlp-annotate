@@ -34,8 +34,9 @@ storiesOf("SequenceAnnotator", module)
       document={`Lorem ipsum dolor.`}
       initialSequence={[
         { label: "noun", text: "Lorem" },
-        { text: " ipsum " },
-        { label: "proper-noun", text: "dolor." }
+        { text: " ipsum  " },
+        { label: "proper-noun", text: "dolor." },
+        { text: " this should be broken up into words." }
       ]}
       labels={[
         {

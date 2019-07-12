@@ -12,7 +12,10 @@ import colors from "../../colors"
 export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
   const [highlightedItems, changeHighlightedItems] = useState([])
   const [sequence, changeSequence] = useState(
-    () => props.initialSequence || stringToSequence(props.document)
+    () =>
+      props.initialSequence.flatMap(entity =>
+        entity.label ? [entity] : stringToSequence(entity.text)
+      ) || stringToSequence(props.document)
   )
   const colorLabelMap = useMemo(
     () =>
