@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:babel && cp ./package.json ./dist/package.json",
     "build:babel": "NODE_ENV=production babel ./src --out-dir=./dist",
-    "dist": "npm run build && cd dist && npm publish",
+    "release": "npm run build && cd dist && npm publish",
     "storybook": "start-storybook -p 9050 -s public",
     "demosite": "react-scripts start",
     "build-storybook": "build-storybook -s public",
