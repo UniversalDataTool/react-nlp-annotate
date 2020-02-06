@@ -1,7 +1,7 @@
 // @flow
 
 import React, { useState } from "react"
-import CreatableSelect from "react-select/lib/AsyncCreatable"
+import CreatableSelect from "react-select/async-creatable"
 import Spelling from "spelling"
 import enDictionary from "spelling/dictionaries/en_US"
 import chroma from "chroma-js"
@@ -79,7 +79,8 @@ export default function EditableDocument({
   initialText?: string,
   validator?: string => Array<string>,
   onChange: string => any,
-  phraseBank?: Array<string>
+  phraseBank?: Array<string>,
+  lowerCaseMode?: boolean
 }) {
   const [inputValue, changeInputValue] = useState()
   const [value, changeValue] = useState(
@@ -90,6 +91,7 @@ export default function EditableDocument({
   const [validationErrors, changeValidationErrors] = useState([])
 
   const handleChange = v => {
+    if (!v) v = []
     changeValue(v)
     const result = v.map(l => l.label).join(" ")
     try {
@@ -103,7 +105,10 @@ export default function EditableDocument({
   const handleKeyDown = ({ key }) => {
     if (!inputValue) return
     if (key === "Enter" || key === "Tab") {
-      changeValue([...value, createOption(inputValue + " ", yellow[700])])
+      changeValue([
+        ...(value || []),
+        createOption(inputValue + " ", yellow[700])
+      ])
       changeInputValue("")
     }
   }
