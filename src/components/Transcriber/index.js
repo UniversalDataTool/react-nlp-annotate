@@ -8,6 +8,7 @@ export default ({
   initialTranscriptionText,
   onChange,
   audio,
+  lowerCaseMode,
   phraseBank: phraseBankParam,
   validator
 }: TranscriberProps) => {
@@ -28,7 +29,7 @@ export default ({
             p.startsWith("http") && (p.endsWith(".txt") || p.endsWith(".csv"))
         )
       ) {
-        const fullPhraseBank = []
+        let fullPhraseBank = []
         for (const url of phraseBankParam) {
           let found
           const saveName = `NLP_ANNOTATOR_PHRASE_BANK_${url}`
@@ -39,12 +40,15 @@ export default ({
             } catch (e) {}
           }
           if (!found) {
-            const urlPhrases = (await fetch(url).then(res => res.text()))
-              .split("\n")
-              .map(a => a.trim().toLowerCase())
+            const urlPhrases = (await fetch(url).then(res => res.text())).split(
+              "\n"
+            )
             window.localStorage[saveName] = JSON.stringify(urlPhrases)
             fullPhraseBank.push(...urlPhrases)
           }
+        }
+        if (lowerCaseMode) {
+          fullPhraseBank = fullPhraseBank.map(a => a.toLowerCase())
         }
         changePhraseBank(fullPhraseBank)
       } else if (Array.isArray(phraseBankParam)) {

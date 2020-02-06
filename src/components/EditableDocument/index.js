@@ -72,6 +72,7 @@ const colourStyles = {
 export default function EditableDocument({
   initialText = "",
   onChange,
+  lowerCaseMode = false,
   phraseBank = [],
   validator = () => []
 }: {
@@ -109,7 +110,7 @@ export default function EditableDocument({
 
   const loadOptions = async text => {
     let bestOption
-    text = text.toLowerCase()
+    if (lowerCaseMode) text = text.toLowerCase()
     const scRes = spellChecker.lookup(text)
     if (scRes.found || phraseBank.includes(text))
       return [createOption(text, green[500])]
