@@ -5,7 +5,9 @@ Interface for doing NLP tasks. [Check it out here](https://waoai.github.io/react
 - Audio transcription
 - Text Labeling (Entity, Classification)
 
-![screenshot](https://user-images.githubusercontent.com/1910070/76181412-560efc00-6197-11ea-8eba-1f48768f5183.png)
+![screenshot 1](https://user-images.githubusercontent.com/1910070/76181412-560efc00-6197-11ea-8eba-1f48768f5183.png)
+
+![screenshot 2](https://user-images.githubusercontent.com/1910070/76181462-8d7da880-6197-11ea-908f-96d988a7efc8.png)
 
 ## Installation
 
