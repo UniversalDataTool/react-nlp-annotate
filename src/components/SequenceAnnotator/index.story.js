@@ -114,3 +114,17 @@ storiesOf("SequenceAnnotator", module)
       onChange={action("onChange")}
     />
   ))
+  .add("Accented Characters", () => (
+    <SequenceAnnotator
+      type="label-sequence"
+      document={`This should appear as a single word: aùbûcàdâeçfégèhêiëjïkîlôm (and not multiple letters)`}
+      labels={[
+        {
+          color: colors[0],
+          id: "test",
+          displayName: "test"
+        }
+      ]}
+      onChange={action("onChange")}
+    />
+  ))

@@ -1,7 +1,7 @@
 // @flow
 
 const stringToSequence = (doc: string) => {
-  const sepRe = /[a-zA-Z]+/g
+  const sepRe = /[a-zA-ZÀ-ÿ]+/g
   let m
   let indices = [0]
   do {
