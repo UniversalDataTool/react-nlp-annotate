@@ -4,7 +4,7 @@
   "homepage": "https://waoai.github.io/react-nlp-annotate/",
   "dependencies": {
     "react-hotkeys": "^2.0.0",
-    "react-material-workspace-layout": "^0.1.4",
+    "react-material-workspace-layout": "^0.1.6",
     "use-event-callback": "^0.1.0"
   },
   "scripts": {
@@ -24,6 +24,9 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",

@@ -21,13 +21,14 @@ export default function Document({
   sequence,
   onHighlightedChanged = () => null,
   onSequenceChange = () => null,
-  nothingHighlighted,
+  nothingHighlighted = false,
   colorLabelMap = {}
 }: Props) {
   const [mouseDown, changeMouseDown] = useState()
-  const [[firstSelected, lastSelected], changeHighlightedRangeState] = useState(
-    [null, null]
-  )
+  const [
+    [firstSelected, lastSelected],
+    changeHighlightedRangeState
+  ] = useState([null, null])
   const changeHighlightedRange = ([first, last]) => {
     changeHighlightedRangeState([first, last])
     const highlightedItems = []
@@ -51,89 +52,88 @@ export default function Document({
       onMouseUp={() => changeMouseDown(false)}
     >
       {sequence.map((seq, i) => (
-        <>
-          <span
-            onMouseDown={() => {
-              if (seq.label) return
-              changeHighlightedRange([i, i])
-            }}
-            onMouseMove={() => {
-              if (seq.label) return
-              if (mouseDown && i !== lastSelected) {
-                changeHighlightedRange([
-                  firstSelected === null ? i : firstSelected,
-                  i
-                ])
-              }
-            }}
-            style={
-              seq.label
-                ? {
-                    display: "inline-flex",
-                    backgroundColor:
-                      seq.color || colorLabelMap[seq.label] || "#333",
-                    color: "#fff",
-                    padding: 4,
-                    margin: 4,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    borderRadius: 4,
-                    userSelect: "none"
-                  }
-                : {
-                    display: "inline-flex",
-                    backgroundColor:
-                      seq.text !== " " && highlightedItems.includes(i)
-                        ? "#ccc"
-                        : "inherit",
-                    color: "#333",
-                    marginTop: 4,
-                    marginBottom: 4,
-                    paddingTop: 4,
-                    paddingBottom: 4,
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                    userSelect: "none"
-                  }
+        <span
+          key={i}
+          onMouseDown={() => {
+            if (seq.label) return
+            changeHighlightedRange([i, i])
+          }}
+          onMouseMove={() => {
+            if (seq.label) return
+            if (mouseDown && i !== lastSelected) {
+              changeHighlightedRange([
+                firstSelected === null ? i : firstSelected,
+                i
+              ])
             }
-            key={i}
-          >
-            {seq.label ? (
-              <Tooltip title={seq.label} placement="bottom">
-                <div>{seq.text}</div>
-              </Tooltip>
-            ) : (
-              <div>{seq.text}</div>
-            )}
-            {seq.label && (
-              <div
-                onClick={() => {
-                  onSequenceChange(
-                    sequence
-                      .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
-                      .filter(s => s.text.length > 0)
-                  )
-                }}
-                style={{
+          }}
+          style={
+            seq.label
+              ? {
                   display: "inline-flex",
-                  cursor: "pointer",
-                  alignSelf: "center",
-                  fontSize: 11,
-                  width: 18,
-                  height: 18,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginLeft: 4,
-                  borderRadius: 9,
+                  backgroundColor:
+                    seq.color || colorLabelMap[seq.label] || "#333",
                   color: "#fff",
-                  backgroundColor: "rgba(0,0,0,0.2)"
-                }}
-              >
-                <span>{"\u2716"}</span>
-              </div>
-            )}
-          </span>
-        </>
+                  padding: 4,
+                  margin: 4,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  borderRadius: 4,
+                  userSelect: "none"
+                }
+              : {
+                  display: "inline-flex",
+                  backgroundColor:
+                    seq.text !== " " && highlightedItems.includes(i)
+                      ? "#ccc"
+                      : "inherit",
+                  color: "#333",
+                  marginTop: 4,
+                  marginBottom: 4,
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                  userSelect: "none"
+                }
+          }
+          key={i}
+        >
+          {seq.label ? (
+            <Tooltip title={seq.label} placement="bottom">
+              <div>{seq.text}</div>
+            </Tooltip>
+          ) : (
+            <div>{seq.text}</div>
+          )}
+          {seq.label && (
+            <div
+              onClick={() => {
+                onSequenceChange(
+                  sequence
+                    .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
+                    .filter(s => s.text.length > 0)
+                )
+              }}
+              style={{
+                display: "inline-flex",
+                cursor: "pointer",
+                alignSelf: "center",
+                fontSize: 11,
+                width: 18,
+                height: 18,
+                alignItems: "center",
+                justifyContent: "center",
+                marginLeft: 4,
+                borderRadius: 9,
+                color: "#fff",
+                backgroundColor: "rgba(0,0,0,0.2)"
+              }}
+            >
+              <span>{"\u2716"}</span>
+            </div>
+          )}
+        </span>
       ))}
     </div>
   )

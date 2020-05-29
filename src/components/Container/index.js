@@ -12,31 +12,30 @@ export default ({
   titleContent,
   onClickHeaderItem
 }: any) => {
-  console.log("rerendering")
-  // const headerItems = useMemo(
-  //   () =>
-  //     [
-  //       currentSampleIndex > 0 && { name: "Prev" },
-  //       numberOfSamples > currentSampleIndex + 1 && { name: "Next" },
-  //       { name: "Done" }
-  //     ].filter(Boolean),
-  //   [currentSampleIndex, numberOfSamples]
-  // )
+  const headerItems = useMemo(
+    () =>
+      [
+        currentSampleIndex > 0 && { name: "Prev" },
+        numberOfSamples > currentSampleIndex + 1 && { name: "Next" },
+        { name: "Done" }
+      ].filter(Boolean),
+    [currentSampleIndex, numberOfSamples]
+  )
   return (
     <Workspace
-      // headerLeftSide={
-      //   titleContent === undefined ? (
-      //     <Box paddingLeft={2} fontWeight="bold">
-      //       <Typography>
-      //         Sample {currentSampleIndex + 1} / {numberOfSamples}
-      //       </Typography>
-      //     </Box>
-      //   ) : (
-      //     titleContent
-      //   )
-      // }
+      headerLeftSide={
+        titleContent === undefined ? (
+          <Box paddingLeft={2} fontWeight="bold">
+            <Typography>
+              Sample {currentSampleIndex + 1} / {numberOfSamples}
+            </Typography>
+          </Box>
+        ) : (
+          titleContent
+        )
+      }
       onClickHeaderItem={onClickHeaderItem}
-      headerItems={[]}
+      headerItems={headerItems}
       iconSidebarItems={[]}
       rightSidebarItems={[]}
     >

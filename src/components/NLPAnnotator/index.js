@@ -1,40 +1,19 @@
 // @flow
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 
 import type { NLPAnnotatorProps } from "../../types"
 import SequenceAnnotator from "../SequenceAnnotator"
 import DocumentLabeler from "../DocumentLabeler"
 import Transcriber from "../Transcriber"
 import colors from "../../colors"
-import { green } from "@material-ui/core/colors"
-import makeStyles from "@material-ui/styles/makeStyles"
 import Container from "../Container"
-import Button from "@material-ui/core/Button"
 import useEventCallback from "use-event-callback"
-
-const useStyles = makeStyles({
-  finishButton: {
-    "&&": {
-      fontSize: 14,
-      textTransform: "none",
-      backgroundColor: green[500],
-      padding: 10,
-      color: "#fff",
-      margin: 10,
-      fontWeight: "bold",
-      "&:hover": {
-        backgroundColor: green[700]
-      }
-    }
-  }
-})
 
 const defaultValidator = () => []
 
 export default function NLPAnnotator(props: NLPAnnotatorProps) {
   const validator = props.validator || defaultValidator
-  const classes = useStyles()
   let [output, changeOutput] = useState(null)
 
   if (output === null && props.type === "transcribe") {
@@ -60,31 +39,17 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     if (props.onChange) props.onChange(newOutput)
     changeOutput(newOutput)
   }
-  if (props.labels && (props: any).labels.some(l => !l.color)) {
-    props = ({
-      ...props,
-      labels: (props: any).labels.map((l, i) => ({
-        color: colors[i % colors.length],
-        ...l
+
+  let labels = useMemo(() => {
+    let labels = props.labels || []
+    if (!labels.some(l => !l.color)) {
+      labels = labels.map((l, i) => ({
+        ...l,
+        color: colors[i % colors.length]
       }))
-    }: any)
-  }
-  let finishButton = null
-  if (props.onFinish) {
-    finishButton = (
-      <Button
-        disabled={validator(output).some(msg =>
-          msg.toLowerCase().includes("error:")
-        )}
-        onClick={() => {
-          props.onFinish(output)
-        }}
-        className={classes.finishButton}
-      >
-        Complete (enter)
-      </Button>
-    )
-  }
+    }
+    return labels
+  }, [props.labels])
 
   const isPassingValidation = validator(output).some(msg =>
     msg.toLowerCase().includes("error")
@@ -95,18 +60,38 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     props.onFinish(output)
   })
 
-  let annotator = null
+  const onClickHeaderItem = useEventCallback(({ name }) => {
+    switch (name) {
+      case "Done":
+        onFinish(output)
+        return
+      default:
+        return
+    }
+  })
+
+  let annotator
   switch (props.type) {
     case "label-sequence":
-      annotator = <SequenceAnnotator {...props} onChange={onChange} />
+      annotator = (
+        <SequenceAnnotator {...props} labels={labels} onChange={onChange} />
+      )
       break
     case "label-document":
-      annotator = <DocumentLabeler {...props} onChange={onChange} />
+      annotator = (
+        <DocumentLabeler {...props} labels={labels} onChange={onChange} />
+      )
       break
     case "transcribe":
       annotator = <Transcriber {...props} onChange={onChange} />
       break
+    default:
+      annotator = null
   }
 
-  return <Container>{annotator}</Container>
+  return (
+    <Container onClickHeaderItem={onClickHeaderItem}>
+      <div>{annotator}</div>
+    </Container>
+  )
 }

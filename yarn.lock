@@ -11295,10 +11295,10 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-material-workspace-layout@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/react-material-workspace-layout/-/react-material-workspace-layout-0.1.4.tgz#36389bb3ffc2cfe0766ec773ae65fdb09d0e5383"
-  integrity sha512-XFxSODI7k8CA2Xac8Oj+zG07D6iVTnfffv2M1UCTHY9xsY/VCmEvk9ePSvoJpwzE/rAEY4BftPeWMPDJ4PcXSw==
+react-material-workspace-layout@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/react-material-workspace-layout/-/react-material-workspace-layout-0.1.6.tgz#38412f8ca2e282ebc169d709cc12137351c8c427"
+  integrity sha512-494vMTYgyPfC5MS7opvRcrWvDyYh3cmKP5uWH8LdSF7oDDVGi9WDEqRQK8eFt0GrBSfNk85eHUEnX74B2cjsDg==
   dependencies:
     "@material-ui/core" "^4.10.0"
     "@material-ui/icons" "^4.9.1"
