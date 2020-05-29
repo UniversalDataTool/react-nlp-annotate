@@ -2,8 +2,7 @@
 
 import React from "react"
 import { makeStyles } from "@material-ui/styles"
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme"
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider"
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 import "./theme.css"
 
 const useStyles = makeStyles({
@@ -28,8 +27,8 @@ const theme = createMuiTheme({
 export default ({ children }: any) => {
   const classes = useStyles()
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <div className={classes.container}>{children}</div>
-    </MuiThemeProvider>
+    </ThemeProvider>
   )
 }

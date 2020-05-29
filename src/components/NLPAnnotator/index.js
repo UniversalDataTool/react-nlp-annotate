@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState, useLayoutEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 import type { NLPAnnotatorProps } from "../../types"
 import SequenceAnnotator from "../SequenceAnnotator"
@@ -11,6 +11,7 @@ import { green } from "@material-ui/core/colors"
 import makeStyles from "@material-ui/styles/makeStyles"
 import Container from "../Container"
 import Button from "@material-ui/core/Button"
+import useEventCallback from "use-event-callback"
 
 const useStyles = makeStyles({
   finishButton: {
@@ -29,7 +30,10 @@ const useStyles = makeStyles({
   }
 })
 
+const defaultValidator = () => []
+
 export default function NLPAnnotator(props: NLPAnnotatorProps) {
+  const validator = props.validator || defaultValidator
   const classes = useStyles()
   let [output, changeOutput] = useState(null)
 
@@ -40,7 +44,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     output = props.initialSequence || [{ text: props.document }]
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const eventFunc = e => {
       if (e.key === "Enter") {
         if (props.onFinish) props.onFinish(output)
@@ -50,7 +54,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     return () => {
       window.removeEventListener("keydown", eventFunc)
     }
-  })
+  }, [props.onFinish])
 
   const onChange = (newOutput: any) => {
     if (props.onChange) props.onChange(newOutput)
@@ -69,12 +73,9 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   if (props.onFinish) {
     finishButton = (
       <Button
-        disabled={
-          props.validator &&
-          (props: any)
-            .validator(output)
-            .some(msg => msg.toLowerCase().includes("error:"))
-        }
+        disabled={validator(output).some(msg =>
+          msg.toLowerCase().includes("error:")
+        )}
         onClick={() => {
           props.onFinish(output)
         }}
@@ -84,29 +85,28 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
       </Button>
     )
   }
-  if (props.type === "label-sequence") {
-    return (
-      <Container>
-        <SequenceAnnotator {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
+
+  const isPassingValidation = validator(output).some(msg =>
+    msg.toLowerCase().includes("error")
+  )
+
+  const onFinish = useEventCallback(() => {
+    if (!isPassingValidation) return
+    props.onFinish(output)
+  })
+
+  let annotator = null
+  switch (props.type) {
+    case "label-sequence":
+      annotator = <SequenceAnnotator {...props} onChange={onChange} />
+      break
+    case "label-document":
+      annotator = <DocumentLabeler {...props} onChange={onChange} />
+      break
+    case "transcribe":
+      annotator = <Transcriber {...props} onChange={onChange} />
+      break
   }
-  if (props.type === "label-document") {
-    return (
-      <Container>
-        <DocumentLabeler {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
-  }
-  if (props.type === "transcribe") {
-    return (
-      <Container>
-        <Transcriber {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
-  }
-  return null
+
+  return <Container>{annotator}</Container>
 }

@@ -1,10 +1,11 @@
 // @flow
 
-import React from "react"
+import React, { useMemo } from "react"
 import type { Label as LabelType } from "../../types.js"
 import FolderOpenIcon from "@material-ui/icons/FolderOpen"
 import classnames from "classnames"
-import makeStyles from "@material-ui/styles/makeStyles"
+import { makeStyles } from "@material-ui/core/styles"
+import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles({
   label: {
@@ -25,6 +26,26 @@ const useStyles = makeStyles({
       fontSize: 12,
       fontWeight: "bold"
     }
+  },
+  deleteableIcon: {
+    display: "inline-flex",
+    cursor: "pointer",
+    alignSelf: "center",
+    fontSize: 11,
+    width: 18,
+    height: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 4,
+    borderRadius: 9,
+    color: "#fff",
+    backgroundColor: "rgba(0,0,0,0.2)"
+  },
+  hotkeyText: {
+    paddingLeft: 4
+  },
+  tooltip: {
+    whiteSpace: "pre-wrap"
   }
 })
 
@@ -48,8 +69,11 @@ const Label = (props: {
     deletable
   } = props
   const classes = useStyles()
+  const tooltipClasses = useMemo(() => ({ tooltip: classes.tooltip }), [
+    classes
+  ])
 
-  return (
+  const button = (
     <div
       onClick={() => props.onClick(id)}
       className={classnames(classes.label, small && "small")}
@@ -65,29 +89,24 @@ const Label = (props: {
         />
       )}
       <div>{displayName || id}</div>
-      {hotkey && <div style={{ paddingLeft: 4 }}>({hotkey})</div>}
+      {hotkey && <div className={classes.hotkeyText}>({hotkey})</div>}
       {deletable && (
-        <div
-          style={{
-            display: "inline-flex",
-            cursor: "pointer",
-            alignSelf: "center",
-            fontSize: 11,
-            width: 18,
-            height: 18,
-            alignItems: "center",
-            justifyContent: "center",
-            marginLeft: 4,
-            borderRadius: 9,
-            color: "#fff",
-            backgroundColor: "rgba(0,0,0,0.2)"
-          }}
-        >
+        <div className={classes.deleteableIcon}>
           <span>{"\u2716"}</span>
         </div>
       )}
     </div>
   )
+
+  if (description) {
+    return (
+      <Tooltip title={description} arrow classes={tooltipClasses}>
+        {button}
+      </Tooltip>
+    )
+  } else {
+    return button
+  }
 }
 
 export default Label
