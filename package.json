@@ -1,6 +1,6 @@
 {
   "name": "react-nlp-annotate",
-  "version": "0.1.22",
+  "version": "0.2.0",
   "homepage": "https://waoai.github.io/react-nlp-annotate/",
   "dependencies": {
     "react-hotkeys": "^2.0.0",
