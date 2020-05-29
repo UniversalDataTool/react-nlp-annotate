@@ -7,6 +7,8 @@ import Workspace from "react-material-workspace-layout/Workspace"
 
 export default ({
   children,
+  onNext,
+  onPrev,
   currentSampleIndex = 0,
   numberOfSamples = 1,
   titleContent,
@@ -15,8 +17,11 @@ export default ({
   const headerItems = useMemo(
     () =>
       [
-        currentSampleIndex > 0 && { name: "Prev" },
-        numberOfSamples > currentSampleIndex + 1 && { name: "Next" },
+        (currentSampleIndex > 0 || onPrev) && { name: "Prev", onClick: onPrev },
+        (numberOfSamples > currentSampleIndex + 1 || onNext) && {
+          name: "Next",
+          onClick: onNext
+        },
         { name: "Done" }
       ].filter(Boolean),
     [currentSampleIndex, numberOfSamples]

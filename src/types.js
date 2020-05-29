@@ -1,5 +1,6 @@
 // @flow
 
+type ReactNode = any
 type LabelId = string
 
 export type SequenceItem = { text: string, label?: LabelId, color?: string }
@@ -13,6 +14,7 @@ export type Label = {
 
 export type LabelDocumentProps = {
   type: "label-document",
+  hotkeysEnabled?: boolean,
   labels: Array<Label>,
   multipleLabels?: boolean,
   document: string,
@@ -22,6 +24,7 @@ export type LabelDocumentProps = {
 
 export type SequenceAnnotatorProps = {
   type: "label-sequence",
+  hotkeysEnabled?: boolean,
   labels: Array<Label>,
   initialSequence?: Array<SequenceItem>,
   document: string,
@@ -30,6 +33,7 @@ export type SequenceAnnotatorProps = {
 
 export type TranscriberProps = {
   type: "transcribe",
+  hotkeysEnabled?: boolean,
   audio: string,
   phraseBank?: Array<string>,
   validator?: string => Array<string>,
@@ -42,6 +46,9 @@ export type NLPAnnotatorProps = {
     | $Exact<SequenceAnnotatorProps>
     | $Exact<LabelDocumentProps>
     | $Exact<TranscriberProps>,
+  onNext?: Function,
+  onPrev?: Function,
+  titleContent?: string | ReactNode,
   onFinish?: string,
   onChange?: string
 }

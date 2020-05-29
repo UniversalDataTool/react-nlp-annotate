@@ -19,8 +19,10 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
     <div>
       <div>
         <LabelSelector
+          hotkeysEnabled={props.hotkeysEnabled}
           labels={props.labels}
           onSelectLabel={(labelId: string) => {
+            console.log({ labelId })
             if (props.multipleLabels) {
               changeSelectedLabels(selectedLabels.concat([labelId]))
               props.onChange(selectedLabels.concat([labelId]))
@@ -38,6 +40,7 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
             if (!label) return
             return (
               <LabelButton
+                key={labelId}
                 {...label}
                 small
                 deletable

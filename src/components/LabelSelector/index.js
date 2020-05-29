@@ -16,7 +16,8 @@ const findRouteFromParents = (labelId, labels) => {
 
 export default ({
   labels,
-  onSelectLabel
+  onSelectLabel,
+  hotkeysEnabled = false
 }: {
   labels: Array<LabelType>,
   onSelectLabel: string => any
@@ -40,6 +41,7 @@ export default ({
   }
 
   useEffect(() => {
+    if (!hotkeysEnabled) return
     const eventFunc = e => {
       if (hotkeyLabelMap[e.key]) {
         const labelId = hotkeyLabelMap[e.key]
@@ -59,7 +61,7 @@ export default ({
     return () => {
       window.removeEventListener("keydown", eventFunc)
     }
-  }, [changeParents, onSelectLabel])
+  }, [changeParents, onSelectLabel, hotkeysEnabled])
 
   return (
     <div>
@@ -104,7 +106,7 @@ export default ({
             <LabelButton
               key={l.id}
               {...l}
-              hotkey={labelHotkeyMap[l.id]}
+              hotkey={hotkeysEnabled ? labelHotkeyMap[l.id] : null}
               onClick={
                 !l.hasChildren
                   ? onSelectLabel

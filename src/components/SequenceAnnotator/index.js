@@ -31,6 +31,7 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
     <div>
       <div>
         <LabelSelector
+          hotkeysEnabled={props.hotkeysEnabled}
           labels={props.labels}
           onSelectLabel={(label: string) => {
             const { color } = props.labels.find(({ id }) => label === id) || {}

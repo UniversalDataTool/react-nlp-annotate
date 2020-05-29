@@ -6,7 +6,11 @@ import { action } from "@storybook/addon-actions"
 import Container from "./"
 
 storiesOf("Container", module).add("Basic", () => (
-  <Container onClickHeaderItem={action("onClickHeaderItem")}>
+  <Container
+    onNext={action("onNext")}
+    onPrev={action("onPrev")}
+    onClickHeaderItem={action("onClickHeaderItem")}
+  >
     Some inner content
   </Container>
 ))

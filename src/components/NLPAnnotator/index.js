@@ -33,7 +33,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     return () => {
       window.removeEventListener("keydown", eventFunc)
     }
-  }, [props.onFinish])
+  }, [props.onFinish, output])
 
   const onChange = (newOutput: any) => {
     if (props.onChange) props.onChange(newOutput)
@@ -51,12 +51,14 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     return labels
   }, [props.labels])
 
-  const isPassingValidation = validator(output).some(msg =>
+  const isPassingValidation = !validator(output).some(msg =>
     msg.toLowerCase().includes("error")
   )
 
+  console.log({ output })
   const onFinish = useEventCallback(() => {
     if (!isPassingValidation) return
+    console.log("onFinish", output)
     props.onFinish(output)
   })
 
@@ -90,7 +92,12 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   }
 
   return (
-    <Container onClickHeaderItem={onClickHeaderItem}>
+    <Container
+      titleContent={props.titleContent}
+      onNext={props.onNext}
+      onPrev={props.onPrev}
+      onClickHeaderItem={onClickHeaderItem}
+    >
       <div>{annotator}</div>
     </Container>
   )

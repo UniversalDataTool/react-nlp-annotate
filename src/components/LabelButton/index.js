@@ -53,7 +53,7 @@ const Label = (props: {
   ...$Exact<LabelType>,
   hasChildren?: boolean,
   small?: boolean,
-  hotkey?: string,
+  hotkey?: ?string,
   deletable?: boolean,
   onClick: string => any
 }) => {
