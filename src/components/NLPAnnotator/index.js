@@ -1,36 +1,19 @@
 // @flow
 
-import React, { useState, useLayoutEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 
 import type { NLPAnnotatorProps } from "../../types"
 import SequenceAnnotator from "../SequenceAnnotator"
 import DocumentLabeler from "../DocumentLabeler"
 import Transcriber from "../Transcriber"
 import colors from "../../colors"
-import { green } from "@material-ui/core/colors"
-import makeStyles from "@material-ui/styles/makeStyles"
 import Container from "../Container"
-import Button from "@material-ui/core/Button"
+import useEventCallback from "use-event-callback"
 
-const useStyles = makeStyles({
-  finishButton: {
-    "&&": {
-      fontSize: 14,
-      textTransform: "none",
-      backgroundColor: green[500],
-      padding: 10,
-      color: "#fff",
-      margin: 10,
-      fontWeight: "bold",
-      "&:hover": {
-        backgroundColor: green[700]
-      }
-    }
-  }
-})
+const defaultValidator = () => []
 
 export default function NLPAnnotator(props: NLPAnnotatorProps) {
-  const classes = useStyles()
+  const validator = props.validator || defaultValidator
   let [output, changeOutput] = useState(null)
 
   if (output === null && props.type === "transcribe") {
@@ -40,7 +23,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     output = props.initialSequence || [{ text: props.document }]
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const eventFunc = e => {
       if (e.key === "Enter") {
         if (props.onFinish) props.onFinish(output)
@@ -50,63 +33,72 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     return () => {
       window.removeEventListener("keydown", eventFunc)
     }
-  })
+  }, [props.onFinish, output])
 
   const onChange = (newOutput: any) => {
     if (props.onChange) props.onChange(newOutput)
     changeOutput(newOutput)
   }
-  if (props.labels && (props: any).labels.some(l => !l.color)) {
-    props = ({
-      ...props,
-      labels: (props: any).labels.map((l, i) => ({
-        color: colors[i % colors.length],
-        ...l
+
+  let labels = useMemo(() => {
+    let labels = props.labels || []
+    if (!labels.some(l => !l.color)) {
+      labels = labels.map((l, i) => ({
+        ...l,
+        color: colors[i % colors.length]
       }))
-    }: any)
+    }
+    return labels
+  }, [props.labels])
+
+  const isPassingValidation = !validator(output).some(msg =>
+    msg.toLowerCase().includes("error")
+  )
+
+  console.log({ output })
+  const onFinish = useEventCallback(() => {
+    if (!isPassingValidation) return
+    console.log("onFinish", output)
+    props.onFinish(output)
+  })
+
+  const onClickHeaderItem = useEventCallback(({ name }) => {
+    switch (name) {
+      case "Done":
+        onFinish(output)
+        return
+      default:
+        return
+    }
+  })
+
+  let annotator
+  switch (props.type) {
+    case "label-sequence":
+      annotator = (
+        <SequenceAnnotator {...props} labels={labels} onChange={onChange} />
+      )
+      break
+    case "label-document":
+      annotator = (
+        <DocumentLabeler {...props} labels={labels} onChange={onChange} />
+      )
+      break
+    case "transcribe":
+      annotator = <Transcriber {...props} onChange={onChange} />
+      break
+    default:
+      annotator = null
   }
-  let finishButton = null
-  if (props.onFinish) {
-    finishButton = (
-      <Button
-        disabled={
-          props.validator &&
-          (props: any)
-            .validator(output)
-            .some(msg => msg.toLowerCase().includes("error:"))
-        }
-        onClick={() => {
-          props.onFinish(output)
-        }}
-        className={classes.finishButton}
-      >
-        Complete (enter)
-      </Button>
-    )
-  }
-  if (props.type === "label-sequence") {
-    return (
-      <Container>
-        <SequenceAnnotator {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
-  }
-  if (props.type === "label-document") {
-    return (
-      <Container>
-        <DocumentLabeler {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
-  }
-  if (props.type === "transcribe") {
-    return (
-      <Container>
-        <Transcriber {...props} onChange={onChange} />
-        <div style={{ textAlign: "right" }}>{finishButton}</div>
-      </Container>
-    )
-  }
-  return null
+
+  return (
+    <Container
+      titleContent={props.titleContent}
+      onNext={props.onNext}
+      onPrev={props.onPrev}
+      onClickHeaderItem={onClickHeaderItem}
+    >
+      <div>{annotator}</div>
+    </Container>
+  )
 }

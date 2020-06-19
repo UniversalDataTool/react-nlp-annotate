@@ -1,10 +1,14 @@
 {
   "name": "react-nlp-annotate",
-  "version": "0.1.21",
-  "homepage": "https://workaroundonline.github.io/react-nlp-annotate/",
-  "dependencies": {},
+  "version": "0.2.0",
+  "homepage": "https://waoai.github.io/react-nlp-annotate/",
+  "dependencies": {
+    "react-hotkeys": "^2.0.0",
+    "react-material-workspace-layout": "^0.1.6",
+    "use-event-callback": "^0.1.0"
+  },
   "scripts": {
-    "build": "npm run build:babel && cp ./package.json ./dist/package.json",
+    "build": "rimraf dist && npm run build:babel && cp ./package.json ./dist/package.json",
     "build:babel": "NODE_ENV=production babel ./src --out-dir=./dist",
     "release": "npm run build && cd dist && npm publish",
     "storybook": "start-storybook -p 9050 -s public",
@@ -20,16 +24,19 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
-    "@material-ui/core": "^3.9.2",
-    "@material-ui/icons": "^3.0.2",
-    "@material-ui/styles": "^3.0.0-alpha.10",
-    "@storybook/addon-actions": "^4",
-    "@storybook/addon-links": "^4",
-    "@storybook/addons": "^4",
-    "@storybook/react": "^4",
+    "@material-ui/core": "^4.10.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/react": "^5.3.19",
     "axios": "^0.19.0",
     "chroma-js": "^2.0.3",
     "downloadjs": "^1.4.7",
@@ -38,12 +45,13 @@
     "js-base64": "^2.5.1",
     "lodash": "^4.17.11",
     "query-string": "^6.8.1",
-    "react": "16.8.0-alpha.1",
-    "react-dom": "16.8.0-alpha.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-monaco-editor": "^0.26.2",
     "react-scripts": "2.1.3",
     "react-select": "^3.0.8",
     "react-syntax-highlighter": "^10.3.0",
+    "rimraf": "^3.0.2",
     "spelling": "^2.0.1"
   }
 }

@@ -13,6 +13,7 @@ const externalWordBank =
 storiesOf("Transcriber", module)
   .add("Basic", () => (
     <Transcriber
+      hotkeysEnabled
       onChange={action("onChange")}
       type="transcribe"
       audio="https://html5tutorial.info/media/vincent.mp3"
@@ -21,6 +22,7 @@ storiesOf("Transcriber", module)
   ))
   .add("Validator & Phrase Bank", () => (
     <Transcriber
+      hotkeysEnabled
       onChange={action("onChange")}
       type="transcribe"
       audio="https://html5tutorial.info/media/vincent.mp3"
@@ -46,6 +48,7 @@ storiesOf("Transcriber", module)
   ))
   .add("External Phrase Bank", () => (
     <Transcriber
+      hotkeysEnabled
       onChange={action("onChange")}
       type="transcribe"
       audio="https://html5tutorial.info/media/vincent.mp3"

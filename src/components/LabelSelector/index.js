@@ -1,16 +1,9 @@
 // @flow
 
-import React, { useState, useLayoutEffect, useEffect } from "react"
-import { makeStyles } from "@material-ui/styles"
+import React, { useState, useEffect, useMemo } from "react"
 import type { Label as LabelType } from "../../types.js"
 import LabelButton from "../LabelButton"
-import Tooltip from "@material-ui/core/Tooltip"
-
-const useStyles = makeStyles({
-  tooltip: {
-    whiteSpace: "pre-wrap"
-  }
-})
+import colors from "../../colors"
 
 const findRouteFromParents = (labelId, labels) => {
   if (!labelId) return []
@@ -23,7 +16,8 @@ const findRouteFromParents = (labelId, labels) => {
 
 export default ({
   labels,
-  onSelectLabel
+  onSelectLabel,
+  hotkeysEnabled = false
 }: {
   labels: Array<LabelType>,
   onSelectLabel: string => any
@@ -46,7 +40,8 @@ export default ({
     }
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (!hotkeysEnabled) return
     const eventFunc = e => {
       if (hotkeyLabelMap[e.key]) {
         const labelId = hotkeyLabelMap[e.key]
@@ -66,9 +61,7 @@ export default ({
     return () => {
       window.removeEventListener("keydown", eventFunc)
     }
-  })
-
-  const c = useStyles()
+  }, [changeParents, onSelectLabel, hotkeysEnabled])
 
   return (
     <div>
@@ -91,22 +84,14 @@ export default ({
               hasChildren: labels.some(l2 => l2.parent === l.id)
             }))
             .map((l, i) => (
-              <Tooltip
-                // open={helpOpen}
-                classes={{ tooltip: c.tooltip }}
-                key={i}
-                title={l.description || "No Description"}
-                placement="bottom"
-              >
-                <LabelButton
-                  small
-                  {...l}
-                  hotkey={labelHotkeyMap[l.id]}
-                  onClick={() => {
-                    changeParents(parents.slice(0, parents.indexOf(l.id) + 1))
-                  }}
-                />
-              </Tooltip>
+              <LabelButton
+                small
+                {...l}
+                hotkey={labelHotkeyMap[l.id]}
+                onClick={() => {
+                  changeParents(parents.slice(0, parents.indexOf(l.id) + 1))
+                }}
+              />
             ))}
         </div>
       )}
@@ -118,26 +103,18 @@ export default ({
             hasChildren: labels.some(l2 => l2.parent === l.id)
           }))
           .map((l, i) => (
-            <Tooltip
-              key={i}
-              classes={{ tooltip: c.tooltip }}
-              title={l.description || "No Description"}
-              placement="bottom"
-            >
-              <div>
-                <LabelButton
-                  {...l}
-                  hotkey={labelHotkeyMap[l.id]}
-                  onClick={
-                    !l.hasChildren
-                      ? onSelectLabel
-                      : () => {
-                          changeParents(parents.concat([l.id]))
-                        }
-                  }
-                />
-              </div>
-            </Tooltip>
+            <LabelButton
+              key={l.id}
+              {...l}
+              hotkey={hotkeysEnabled ? labelHotkeyMap[l.id] : null}
+              onClick={
+                !l.hasChildren
+                  ? onSelectLabel
+                  : () => {
+                      changeParents(parents.concat([l.id]))
+                    }
+              }
+            />
           ))}
       </div>
     </div>

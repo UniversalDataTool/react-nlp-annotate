@@ -93,7 +93,10 @@ export default function EditableDocument({
   const handleChange = v => {
     if (!v) v = []
     changeValue(v)
-    const result = v.map(l => l.label).join(" ")
+    const result = v
+      .map(l => l.label.trim())
+      .join(" ")
+      .trim()
     try {
       changeValidationErrors(validator(result))
     } catch (e) {
@@ -101,13 +104,43 @@ export default function EditableDocument({
     }
     onChange(result)
   }
+  const isInDictionary = text => {
+    if (lowerCaseMode) text = text.trim().toLowerCase()
+    const scRes = spellChecker.lookup(text)
+    if (scRes.found || phraseBank.includes(text)) return true
+    return false
+  }
+
   const handleInputChange = v => changeInputValue(v)
   const handleKeyDown = ({ key }) => {
     if (!inputValue) return
     if (key === "Enter" || key === "Tab") {
       changeValue([
         ...(value || []),
-        createOption(inputValue + " ", yellow[700])
+        createOption(inputValue.trim(), yellow[700])
+      ])
+      changeInputValue("")
+    } else if (key === " " && isInDictionary(inputValue.trim())) {
+      changeValue([
+        ...(value || []),
+        createOption(inputValue.trim(), green[500])
+      ])
+      changeInputValue("")
+    } else if (
+      key === " " &&
+      isInDictionary(inputValue.split(" ").slice(-1)[0])
+    ) {
+      changeValue([
+        ...(value || []),
+        createOption(
+          inputValue
+            .split(" ")
+            .slice(0, -1)
+            .join(" ")
+            .trim(),
+          yellow[700]
+        ),
+        createOption(inputValue.split(" ").slice(-1)[0], green[700])
       ])
       changeInputValue("")
     }
