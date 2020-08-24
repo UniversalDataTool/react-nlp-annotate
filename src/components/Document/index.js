@@ -8,7 +8,9 @@ import type {
 import { styled } from "@material-ui/styles"
 import stringToSequence from "../../string-to-sequence.js"
 import Tooltip from "@material-ui/core/Tooltip"
+import RelationshipArrows from "../RelationshipArrows"
 import Measure from "react-measure"
+import colors from "../../colors"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
   lineHeight: 1.5,
@@ -93,8 +95,6 @@ export default function Document({
       highlightedItems.push(i)
   }
 
-  console.log(sequenceItemPositionsRef.current)
-
   return (
     <Container
       relationshipsOn={Boolean(relationships)}
@@ -163,6 +163,21 @@ export default function Document({
           )}
         </Measure>
       ))}
+      <RelationshipArrows
+        positions={sequenceItemPositionsRef.current}
+        arrows={[
+          { from: "l2", to: "l4", label: "R1" },
+          { from: "l1", to: "l4", label: "R2" },
+          { from: "l0", to: "l4", label: "R2" },
+          { from: "l5", to: "l6", label: "R3" },
+          { from: "l7", to: "l6", label: "R3" },
+          { from: "l8", to: "l6", label: "R3" },
+          { from: "l2", to: "l1", label: "R4" },
+          { from: "l4", to: "l10", label: "R5" },
+          { from: "l1", to: "l12", label: "R6" },
+          { from: "l12", to: "l1", label: "R6" }
+        ].map((a, i) => ({ ...a, color: colors[i % colors.length] }))}
+      />
     </Container>
   )
 }

@@ -12,10 +12,29 @@ interactively.
 */
 
 import React from "react"
+import { styled } from "@material-ui/core/styles"
 
-const ARROW_WIDTH = 2
 const X_SEP_DIST = 5
-const Y_SEP_DIST = 12
+const Y_SEP_DIST = 16
+
+const ArrowLabel = styled("div")({
+  position: "absolute",
+  transform: "translate(-50%,0%)",
+  padding: 1,
+  paddingLeft: 4,
+  paddingRight: 4,
+  fontSize: 11,
+  color: "#fff",
+  border: "1px solid rgba(0,0,0,0.2)",
+  // transition: "transform 120ms",
+  borderRadius: 4,
+  fontWeight: "bold",
+  "&:hover": {
+    zIndex: 999,
+    cursor: "pointer",
+    transform: "translate(-50%, 0%) scale(1.05,1.05)"
+  }
+})
 
 export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
   const constraintGroups: Array<
@@ -27,6 +46,8 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
   > = []
   for (const arrow of arrows) {
     const { from, to, label } = arrow
+
+    if (!positions[from] || !positions[to]) return null
 
     const p1 = positions[from].offset
     const p2 = positions[to].offset
@@ -55,7 +76,8 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
           weight: Math.abs(xDist),
           width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
           centerX: (p1.left + p2.left + p1.width / 2 + p2.width / 2) / 2,
-          y
+          y,
+          hasLabel: true
         },
         {
           type: "vertical",
@@ -85,7 +107,8 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
           weight: Math.abs(xDist),
           width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
           centerX: (p1.left + p2.left + p1.width / 2 + p2.width / 2) / 2,
-          y
+          y,
+          hasLabel: true
         },
         {
           type: "vertical",
@@ -121,7 +144,8 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
           weight: Math.abs(xDist),
           width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
           centerX: (p1.left + x1 + p1.width / 2) / 2,
-          y: y1
+          y: y1,
+          hasLabel: true
         },
         {
           type: "vertical",
@@ -263,51 +287,77 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
     linePoints.push(points)
   }
 
+  const labelPositions = constraintGroups.map((group, i) => {
+    const labelConstraintIndex = group.findIndex(c => c.hasLabel)
+    const p1 = linePoints[i][labelConstraintIndex]
+    const p2 = linePoints[i][labelConstraintIndex + 1]
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
+  })
+
   const svgOffset = { x: 100, y: 100 }
 
   return (
-    <svg width="600" height="600">
-      <defs>
-        {arrows.map((arrow, i) => (
-          <marker
-            id={"arrowhead" + i}
-            markerWidth="5"
-            markerHeight="5"
-            refX="0"
-            refY="2.5"
-            orient="auto"
-          >
-            <polygon fill={arrow.color || "#000"} points="0 0, 6 2.5, 0 5" />
-          </marker>
+    <div
+      style={{
+        position: "absolute",
+        left: -svgOffset.x,
+        top: -svgOffset.y
+      }}
+    >
+      <svg width="600" height="600">
+        <defs>
+          {arrows.map((arrow, i) => (
+            <marker
+              id={"arrowhead" + i}
+              markerWidth="5"
+              markerHeight="5"
+              refX="0"
+              refY="2.5"
+              orient="auto"
+            >
+              <polygon fill={arrow.color || "#000"} points="0 0, 6 2.5, 0 5" />
+            </marker>
+          ))}
+        </defs>
+        {linePoints.map((lp, i) => (
+          <polyline
+            key={i}
+            stroke={arrows[i].color || "#000"}
+            fill="none"
+            marker-end={`url(#arrowhead${i})`}
+            stroke-width="2"
+            points={lp
+              .map(
+                ([x, y], i) =>
+                  `${svgOffset.x + x},${svgOffset.y +
+                    y -
+                    (i === lp.length - 1 ? 10 : 0)}`
+              )
+              .join(" ")}
+          />
         ))}
-      </defs>
-      {linePoints.map((lp, i) => (
-        <polyline
-          key={i}
-          stroke={arrows[i].color || "#000"}
-          fill="none"
-          marker-end={`url(#arrowhead${i})`}
-          stroke-width="2"
-          points={lp
-            .map(
-              ([x, y], i) =>
-                `${svgOffset.x + x},${svgOffset.y +
-                  y -
-                  (i === lp.length - 1 ? 10 : 0)}`
-            )
-            .join(" ")}
-        />
+        {Object.values(positions).map(p => (
+          <rect
+            x={p.offset.left + svgOffset.x}
+            y={p.offset.top + svgOffset.y}
+            width={p.offset.width}
+            height={p.offset.height}
+            fill="rgba(0,0,0,0.5)"
+          />
+        ))}
+      </svg>
+      {arrows.map((arrow, i) => (
+        <ArrowLabel
+          style={{
+            left: svgOffset.x + labelPositions[i][0],
+            top: svgOffset.y - 7 + labelPositions[i][1],
+            backgroundColor: arrow.color
+          }}
+        >
+          arrow{i}
+        </ArrowLabel>
       ))}
-      {Object.values(positions).map(p => (
-        <rect
-          x={p.offset.left + svgOffset.x}
-          y={p.offset.top + svgOffset.y}
-          width={p.offset.width}
-          height={p.offset.height}
-          fill="rgba(0,0,0,0.5)"
-        />
-      ))}
-    </svg>
+    </div>
   )
 }
 
