@@ -9,7 +9,7 @@ import stringToSequence from "../../string-to-sequence.js"
 import mergeSequence from "../../merge-sequence.js"
 import colors from "../../colors"
 
-export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
+export default function RelationshipAnnotator(props: SequenceAnnotatorProps) {
   const [highlightedItems, changeHighlightedItems] = useState([])
   const [sequence, changeSequence] = useState(() =>
     props.initialSequence

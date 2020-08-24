@@ -2,14 +2,26 @@
 
 type ReactNode = any
 type LabelId = string
+type TextId = string
 
-export type SequenceItem = { text: string, label?: LabelId, color?: string }
+export type SequenceItem = {
+  text: string,
+  label?: LabelId,
+  color?: string,
+  textId?: TextId
+}
 export type Label = {
   parent?: string,
   displayName?: string,
   description?: string,
   color: string,
   id: string
+}
+
+export type Relationship = {
+  from: TextId,
+  to: TextId,
+  label: LabelId
 }
 
 export type LabelDocumentProps = {
@@ -25,7 +37,19 @@ export type LabelDocumentProps = {
 export type SequenceAnnotatorProps = {
   type: "label-sequence",
   hotkeysEnabled?: boolean,
+  separatorRegex?: RegExp,
   labels: Array<Label>,
+  initialSequence?: Array<SequenceItem>,
+  document: string,
+  onChange: (sequence: Array<SequenceItem>) => any
+}
+
+export type RelationshipAnnotatorProps = {
+  type: "label-relationships",
+  hotkeysEnabled?: boolean,
+  separatorRegex?: RegExp,
+  relationships: Array<Label>,
+  labels?: Array<Label>,
   initialSequence?: Array<SequenceItem>,
   document: string,
   onChange: (sequence: Array<SequenceItem>) => any

@@ -5,6 +5,7 @@
   "dependencies": {
     "react-hotkeys": "^2.0.0",
     "react-material-workspace-layout": "^0.1.6",
+    "react-measure": "^2.3.0",
     "use-event-callback": "^0.1.0"
   },
   "scripts": {

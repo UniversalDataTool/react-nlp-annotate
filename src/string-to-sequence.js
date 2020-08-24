@@ -1,7 +1,9 @@
 // @flow
 
-const stringToSequence = (doc: string) => {
-  const sepRe = /[a-zA-ZÀ-ÿ]+/g
+const stringToSequence = (doc: string, sepRe: RegExp = /[a-zA-ZÀ-ÿ]+/g) => {
+  if (typeof sepRe === "string") {
+    sepRe = new RegExp(sepRe)
+  }
   let m
   let indices = [0]
   do {
