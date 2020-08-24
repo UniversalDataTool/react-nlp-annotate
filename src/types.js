@@ -49,11 +49,14 @@ export type RelationshipAnnotatorProps = {
   type: "label-relationships",
   hotkeysEnabled?: boolean,
   separatorRegex?: RegExp,
-  relationships: Array<Label>,
+  relationships: Array<Relationship>,
   labels?: Array<Label>,
   initialSequence?: Array<SequenceItem>,
   document: string,
-  onChange: (sequence: Array<SequenceItem>) => any
+  onChange: ({
+    sequence: Array<SequenceItem>,
+    relationships: Array<Relationship>
+  }) => any
 }
 
 export type TranscriberProps = {

@@ -31,6 +31,7 @@ storiesOf("Document", module)
   ))
   .add("Relationships", () => (
     <Document
+      createRelationshipsMode
       onSequenceChange={action("onSequenceChange")}
       onRelationshipsChange={action("onRelationshipsChange")}
       onHighlightedChanged={action("onHighlightedChanged")}

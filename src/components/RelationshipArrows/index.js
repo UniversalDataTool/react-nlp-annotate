@@ -418,7 +418,10 @@ export const RelationshipArrows = ({
       </div>
       {arrows.map((arrow, i) => (
         <ArrowLabel
-          onClick={() => onClickArrow(arrow)}
+          onClick={e => {
+            e.stopPropagation()
+            onClickArrow(arrow)
+          }}
           style={{
             left: labelPositions[i][0],
             top: labelPositions[i][1] - 9,

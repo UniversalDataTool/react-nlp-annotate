@@ -11,14 +11,16 @@ const mergeSequence = (
     } else {
       newSeq.push({
         label: current[0].label,
-        text: current.reduce((acc, c) => acc + c.text, "")
+        text: current.reduce((acc, c) => acc + c.text, ""),
+        textId: current[0].textId
       })
       current = [seq[i]]
     }
   }
   newSeq.push({
     label: current[0].label,
-    text: current.reduce((acc, c) => acc + c.text, "")
+    text: current.reduce((acc, c) => acc + c.text, ""),
+    textId: current[0].textId
   })
   return newSeq
 }

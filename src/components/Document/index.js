@@ -68,14 +68,16 @@ export default function Document({
   sequence,
   relationships,
   onHighlightedChanged = () => null,
+  onLastPairClickedChanged = () => null,
   onSequenceChange = () => null,
   onRelationshipsChange = () => null,
   nothingHighlighted = false,
+  createRelationshipsMode = false,
   colorLabelMap = {}
 }: Props) {
   const sequenceItemPositionsRef = useRef({})
   const [mouseDown, changeMouseDown] = useState()
-  const [timeoutCalled, cancelTimeout, resetTimeout] = useTimeout(100) // Force rerender after mounting
+  const [timeoutCalled, cancelTimeout, resetTimeout] = useTimeout(10) // Force rerender after mounting
   const windowSize = useWindowSize()
   useEffect(() => {
     resetTimeout()
@@ -84,7 +86,11 @@ export default function Document({
     [firstSelected, lastSelected],
     changeHighlightedRangeState
   ] = useState([null, null])
+
   const changeHighlightedRange = ([first, last]) => {
+    if (first !== firstSelected && first !== null && firstSelected !== null) {
+      onLastPairClickedChanged([firstSelected, first])
+    }
     changeHighlightedRangeState([first, last])
     const highlightedItems = []
     for (let i = Math.min(first, last); i <= Math.max(first, last); i++)
@@ -122,24 +128,30 @@ export default function Document({
             }
           }}
           relationshipsOn={Boolean(relationships)}
+          onClick={e => e.stopPropagation()}
           onMouseDown={() => {
-            if (seq.label) return
+            if (seq.label && !createRelationshipsMode) return
             changeHighlightedRange([i, i])
           }}
           onMouseMove={() => {
-            if (seq.label) return
-            if (mouseDown && i !== lastSelected) {
-              changeHighlightedRange([
-                firstSelected === null ? i : firstSelected,
-                i
-              ])
+            if (!mouseDown) return
+            if (!createRelationshipsMode) {
+              if (seq.label) return
+              if (i !== lastSelected) {
+                changeHighlightedRange([
+                  firstSelected === null ? i : firstSelected,
+                  i
+                ])
+              }
             }
           }}
           className={seq.label ? "label" : "unlabeled"}
           color={
             seq.label
               ? seq.color || colorLabelMap[seq.label] || "#333"
-              : seq.text !== " " && highlightedItems.includes(i)
+              : !createRelationshipsMode &&
+                seq.text !== " " &&
+                highlightedItems.includes(i)
               ? "#ccc"
               : "inherit"
           }
@@ -154,7 +166,8 @@ export default function Document({
           )}
           {seq.label && (
             <LabeledText
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation()
                 onSequenceChange(
                   sequence
                     .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
