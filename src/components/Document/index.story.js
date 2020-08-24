@@ -32,6 +32,7 @@ storiesOf("Document", module)
   .add("Relationships", () => (
     <Document
       onSequenceChange={action("onSequenceChange")}
+      onRelationshipsChange={action("onRelationshipsChange")}
       onHighlightedChanged={action("onHighlightedChanged")}
       sequence={`Barack Hussein Obama II (born August 4, 1961) is an American attorney and politician`
         .split(" ")

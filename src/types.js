@@ -21,7 +21,8 @@ export type Label = {
 export type Relationship = {
   from: TextId,
   to: TextId,
-  label: LabelId
+  label: LabelId,
+  color?: string
 }
 
 export type LabelDocumentProps = {

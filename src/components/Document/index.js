@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import type {
   SequenceItem as SequenceItemData,
   Relationship
@@ -9,8 +9,8 @@ import { styled } from "@material-ui/styles"
 import stringToSequence from "../../string-to-sequence.js"
 import Tooltip from "@material-ui/core/Tooltip"
 import RelationshipArrows from "../RelationshipArrows"
-import Measure from "react-measure"
 import colors from "../../colors"
+import { useTimeout, useWindowSize } from "react-use"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
   lineHeight: 1.5,
@@ -69,11 +69,17 @@ export default function Document({
   relationships,
   onHighlightedChanged = () => null,
   onSequenceChange = () => null,
+  onRelationshipsChange = () => null,
   nothingHighlighted = false,
   colorLabelMap = {}
 }: Props) {
   const sequenceItemPositionsRef = useRef({})
   const [mouseDown, changeMouseDown] = useState()
+  const [timeoutCalled, cancelTimeout, resetTimeout] = useTimeout(100) // Force rerender after mounting
+  const windowSize = useWindowSize()
+  useEffect(() => {
+    resetTimeout()
+  }, [windowSize])
   const [
     [firstSelected, lastSelected],
     changeHighlightedRangeState
@@ -102,82 +108,81 @@ export default function Document({
       onMouseUp={() => changeMouseDown(false)}
     >
       {sequence.map((seq, i) => (
-        <Measure
-          offset
+        <SequenceItem
           key={seq.textId || i}
-          onResize={contentRect => {
-            if (!sequenceItemPositionsRef.current) return
-            sequenceItemPositionsRef.current[seq.textId] = contentRect
-          }}
-        >
-          {({ measureRef }) => (
-            <SequenceItem
-              ref={measureRef}
-              relationshipsOn={Boolean(relationships)}
-              onMouseDown={() => {
-                if (seq.label) return
-                changeHighlightedRange([i, i])
-              }}
-              onMouseMove={() => {
-                if (seq.label) return
-                if (mouseDown && i !== lastSelected) {
-                  changeHighlightedRange([
-                    firstSelected === null ? i : firstSelected,
-                    i
-                  ])
-                }
-              }}
-              className={seq.label ? "label" : "unlabeled"}
-              color={
-                seq.label
-                  ? seq.color || colorLabelMap[seq.label] || "#333"
-                  : seq.text !== " " && highlightedItems.includes(i)
-                  ? "#ccc"
-                  : "inherit"
+          ref={elm => {
+            if (!elm) return
+            sequenceItemPositionsRef.current[seq.textId] = {
+              offset: {
+                left: elm.offsetLeft,
+                top: elm.offsetTop,
+                width: elm.offsetWidth,
+                height: elm.offsetHeight
               }
-              key={i}
-            >
-              {seq.label ? (
-                <Tooltip title={seq.label} placement="bottom">
-                  <div>{seq.text}</div>
-                </Tooltip>
-              ) : (
-                <div>{seq.text}</div>
-              )}
-              {seq.label && (
-                <LabeledText
-                  onClick={() => {
-                    onSequenceChange(
-                      sequence
-                        .flatMap(s =>
-                          s !== seq ? s : stringToSequence(s.text)
-                        )
-                        .filter(s => s.text.length > 0)
-                    )
-                  }}
-                >
-                  <span>{"\u2716"}</span>
-                </LabeledText>
-              )}
-            </SequenceItem>
+            }
+          }}
+          relationshipsOn={Boolean(relationships)}
+          onMouseDown={() => {
+            if (seq.label) return
+            changeHighlightedRange([i, i])
+          }}
+          onMouseMove={() => {
+            if (seq.label) return
+            if (mouseDown && i !== lastSelected) {
+              changeHighlightedRange([
+                firstSelected === null ? i : firstSelected,
+                i
+              ])
+            }
+          }}
+          className={seq.label ? "label" : "unlabeled"}
+          color={
+            seq.label
+              ? seq.color || colorLabelMap[seq.label] || "#333"
+              : seq.text !== " " && highlightedItems.includes(i)
+              ? "#ccc"
+              : "inherit"
+          }
+          key={i}
+        >
+          {seq.label ? (
+            <Tooltip title={seq.label} placement="bottom">
+              <div>{seq.text}</div>
+            </Tooltip>
+          ) : (
+            <div>{seq.text}</div>
           )}
-        </Measure>
+          {seq.label && (
+            <LabeledText
+              onClick={() => {
+                onSequenceChange(
+                  sequence
+                    .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
+                    .filter(s => s.text.length > 0)
+                )
+              }}
+            >
+              <span>{"\u2716"}</span>
+            </LabeledText>
+          )}
+        </SequenceItem>
       ))}
-      <RelationshipArrows
-        positions={sequenceItemPositionsRef.current}
-        arrows={[
-          { from: "l2", to: "l4", label: "R1" },
-          { from: "l1", to: "l4", label: "R2" },
-          { from: "l0", to: "l4", label: "R2" },
-          { from: "l5", to: "l6", label: "R3" },
-          { from: "l7", to: "l6", label: "R3" },
-          { from: "l8", to: "l6", label: "R3" },
-          { from: "l2", to: "l1", label: "R4" },
-          { from: "l4", to: "l10", label: "R5" },
-          { from: "l1", to: "l12", label: "R6" },
-          { from: "l12", to: "l1", label: "R6" }
-        ].map((a, i) => ({ ...a, color: colors[i % colors.length] }))}
-      />
+      {relationships && (
+        <RelationshipArrows
+          onClickArrow={({ label, from, to }) => {
+            onRelationshipsChange(
+              relationships.filter(
+                r => !(r.from === from && r.to === to && r.label === label)
+              )
+            )
+          }}
+          positions={sequenceItemPositionsRef.current}
+          arrows={relationships.map((a, i) => ({
+            ...a,
+            color: a.color || colors[i % colors.length]
+          }))}
+        />
+      )}
     </Container>
   )
 }

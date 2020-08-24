@@ -9,6 +9,10 @@ thought I needed to use a constraint solver, but it turns out that a system of
 rules is fine. A lot of the formulas were built by checking numbers against examples
 interactively.
 
+Conceptually, we place arrows in places where we know they'll overlap, then we
+look at each overlapping group and place them next to eachother in an order
+prioritized by how far the arrow has traveled.
+
 */
 
 import React from "react"
@@ -36,7 +40,19 @@ const ArrowLabel = styled("div")({
   }
 })
 
-export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
+export const RelationshipArrows = ({
+  positions,
+  showBoxBg = false,
+  arrows,
+  rowHeight = 100,
+  onClickArrow
+}) => {
+  const totalWidth = Math.max(
+    ...Object.values(positions).map(o => o.offset.left + o.offset.width)
+  )
+  const totalHeight = Math.max(
+    ...Object.values(positions).map(o => o.offset.top + o.offset.height)
+  )
   const constraintGroups: Array<
     Array<{
       type: "vertical" | "horizontal",
@@ -90,36 +106,71 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
         }
       ])
     } else if (rowDelta === 1) {
-      const y = p1.top + p1.height + Y_SEP_DIST
-      constraintGroups.push([
-        {
-          type: "vertical",
-          direction: -Math.sign(xDist),
-          weight: Math.abs(xDist),
-          x: p1.left + p1.width / 2 - X_SEP_DIST * Math.sign(xDist),
-          y: p1.top + p1.height,
-          height: rowHeight,
-          centerY: (y + p1.top + p1.height) / 2
-        },
-        {
-          type: "horizontal",
-          direction: 1,
-          weight: Math.abs(xDist),
-          width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
-          centerX: (p1.left + p2.left + p1.width / 2 + p2.width / 2) / 2,
-          y,
-          hasLabel: true
-        },
-        {
-          type: "vertical",
-          direction: Math.sign(xDist),
-          weight: Math.abs(xDist),
-          x: p2.left + p2.width / 2 + X_SEP_DIST * Math.sign(xDist),
-          y: p2.top,
-          height: rowHeight,
-          centerY: (y + p2.top) / 2
-        }
-      ])
+      const yDist = p1.top - p2.top
+      if (yDist < 0) {
+        const y = p1.top + p1.height + Y_SEP_DIST
+        constraintGroups.push([
+          {
+            type: "vertical",
+            direction: -Math.sign(xDist),
+            weight: Math.abs(xDist),
+            x: p1.left + p1.width / 2 - X_SEP_DIST * Math.sign(xDist),
+            y: p1.top + p1.height,
+            height: rowHeight / 2,
+            centerY: (y + p1.top + p1.height) / 2
+          },
+          {
+            type: "horizontal",
+            direction: 1,
+            weight: Math.abs(xDist),
+            width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
+            centerX: (p1.left + p2.left + p1.width / 2 + p2.width / 2) / 2,
+            y,
+            hasLabel: true
+          },
+          {
+            type: "vertical",
+            direction: Math.sign(xDist),
+            weight: Math.abs(xDist),
+            x: p2.left + p2.width / 2 + X_SEP_DIST * Math.sign(xDist),
+            y: p2.top,
+            height: rowHeight / 2,
+            centerY: (y + p2.top) / 2
+          }
+        ])
+      } else {
+        const y = p1.top - Y_SEP_DIST * 1.5
+        // this arrow is going up (to the above row)
+        constraintGroups.push([
+          {
+            type: "vertical",
+            direction: -Math.sign(xDist),
+            weight: Math.abs(xDist),
+            x: p1.left + p1.width / 2 - X_SEP_DIST * Math.sign(xDist),
+            y: p1.top,
+            height: rowHeight / 2,
+            centerY: (y + p1.top + p1.height) / 2
+          },
+          {
+            type: "horizontal",
+            direction: -1,
+            weight: Math.abs(xDist),
+            width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
+            centerX: (p1.left + p2.left + p1.width / 2 + p2.width / 2) / 2,
+            y,
+            hasLabel: true
+          },
+          {
+            type: "vertical",
+            direction: Math.sign(xDist),
+            weight: Math.abs(xDist),
+            x: p2.left + p2.width / 2 + X_SEP_DIST * Math.sign(xDist),
+            y: p2.top + p2.height,
+            height: rowHeight / 2,
+            centerY: (y + p2.top + p2.height) / 2
+          }
+        ])
+      }
     } else {
       const y1 = p1.top + p1.height + Y_SEP_DIST
       const y2 = p2.top - Y_SEP_DIST * 1.5
@@ -135,7 +186,7 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
           weight: Math.abs(xDist1),
           x: p1.left + p1.width / 2 - X_SEP_DIST,
           y: p1.top + p1.height,
-          height: rowHeight,
+          height: rowHeight / 2,
           centerY: y1
         },
         {
@@ -157,16 +208,16 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
         },
         {
           type: "horizontal",
-          direction: 1,
-          weight: Math.abs(xDist),
-          width: Math.abs(p1.left + p1.width / 2 - p2.left - p2.width / 2),
-          centerX: (p1.left + x1 + p1.width / 2) / 2,
+          direction: -1,
+          weight: Math.abs(xDist2),
+          width: Math.abs(x1 - p2.left - p2.width / 2),
+          centerX: (p2.left + x1 + p2.width / 2) / 2,
           y: y2
         },
         {
           type: "vertical",
           direction: -1,
-          weight: Math.abs(xDist),
+          weight: Math.abs(xDist2),
           x: p2.left + p2.width / 2 - X_SEP_DIST,
           y: p2.top,
           height: Math.abs(y1 - y2),
@@ -295,66 +346,86 @@ export const RelationshipArrows = ({ positions, arrows, rowHeight = 100 }) => {
   })
 
   const svgOffset = { x: 100, y: 100 }
+  const containerPosition = {
+    position: "absolute",
+    left: -svgOffset.x,
+    top: -svgOffset.y
+  }
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: -svgOffset.x,
-        top: -svgOffset.y
-      }}
-    >
-      <svg width="600" height="600">
-        <defs>
-          {arrows.map((arrow, i) => (
-            <marker
-              id={"arrowhead" + i}
-              markerWidth="5"
-              markerHeight="5"
-              refX="0"
-              refY="2.5"
-              orient="auto"
-            >
-              <polygon fill={arrow.color || "#000"} points="0 0, 6 2.5, 0 5" />
-            </marker>
+    <div>
+      <div
+        style={{
+          pointerEvents: "none",
+          ...containerPosition
+        }}
+      >
+        <svg
+          width={totalWidth + svgOffset.x}
+          height={totalHeight + svgOffset.y + 50}
+        >
+          <defs>
+            {arrows.map((arrow, i) => (
+              <marker
+                id={"arrowhead" + i}
+                markerWidth="5"
+                markerHeight="5"
+                refX="0"
+                refY="2.5"
+                orient="auto"
+              >
+                <polygon
+                  fill={arrow.color || "#000"}
+                  points="0 0, 6 2.5, 0 5"
+                />
+              </marker>
+            ))}
+          </defs>
+          {linePoints.map((lp, i) => (
+            <polyline
+              key={i}
+              stroke={arrows[i].color || "#000"}
+              fill="none"
+              marker-end={`url(#arrowhead${i})`}
+              stroke-width="2"
+              points={lp
+                .map(
+                  ([x, y], i) =>
+                    `${svgOffset.x + x},${svgOffset.y +
+                      y -
+                      (i === lp.length - 1
+                        ? lp[i - 1][1] < y
+                          ? 10
+                          : -10
+                        : 0)}`
+                )
+                .join(" ")}
+            />
           ))}
-        </defs>
-        {linePoints.map((lp, i) => (
-          <polyline
-            key={i}
-            stroke={arrows[i].color || "#000"}
-            fill="none"
-            marker-end={`url(#arrowhead${i})`}
-            stroke-width="2"
-            points={lp
-              .map(
-                ([x, y], i) =>
-                  `${svgOffset.x + x},${svgOffset.y +
-                    y -
-                    (i === lp.length - 1 ? 10 : 0)}`
-              )
-              .join(" ")}
-          />
-        ))}
-        {Object.values(positions).map(p => (
-          <rect
-            x={p.offset.left + svgOffset.x}
-            y={p.offset.top + svgOffset.y}
-            width={p.offset.width}
-            height={p.offset.height}
-            fill="rgba(0,0,0,0.5)"
-          />
-        ))}
-      </svg>
+          {showBoxBg &&
+            Object.values(positions).map(p => (
+              <rect
+                x={p.offset.left + svgOffset.x}
+                y={p.offset.top + svgOffset.y}
+                width={p.offset.width}
+                height={p.offset.height}
+                stroke="rgba(0,0,0,0.5)"
+                stroke-dasharray="10 5"
+                fill="none"
+              />
+            ))}
+        </svg>
+      </div>
       {arrows.map((arrow, i) => (
         <ArrowLabel
+          onClick={() => onClickArrow(arrow)}
           style={{
-            left: svgOffset.x + labelPositions[i][0],
-            top: svgOffset.y - 7 + labelPositions[i][1],
+            left: labelPositions[i][0],
+            top: labelPositions[i][1] - 9,
             backgroundColor: arrow.color
           }}
         >
-          arrow{i}
+          {arrow.label}
         </ArrowLabel>
       ))}
     </div>

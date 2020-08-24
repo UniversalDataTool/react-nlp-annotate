@@ -9,8 +9,9 @@ import colors from "../../colors"
 import RelationshipArrows from "./"
 
 storiesOf("RelationshipArrows", module).add("Basic", () => (
-  <div style={{ padding: 100 }}>
+  <div style={{ position: "relative", margin: 100 }}>
     <RelationshipArrows
+      showBoxBg
       positions={{
         l0: {
           offset: { top: 68, left: 4, width: 54, height: 32 }
@@ -65,7 +66,8 @@ storiesOf("RelationshipArrows", module).add("Basic", () => (
         { from: "l2", to: "l1", label: "R4" },
         { from: "l4", to: "l10", label: "R5" },
         { from: "l1", to: "l12", label: "R6" },
-        { from: "l12", to: "l1", label: "R6" }
+        { from: "l12", to: "l1", label: "R6" },
+        { from: "l12", to: "l7", label: "R6" }
       ].map((a, i) => ({ ...a, color: colors[i % colors.length] }))}
     />
   </div>
