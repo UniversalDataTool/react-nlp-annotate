@@ -82,7 +82,6 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   })
 
   let annotator
-  console.log("props.type", props.type)
   switch (props.type) {
     case "label-sequence":
       annotator = (
