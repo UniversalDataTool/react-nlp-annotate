@@ -40,7 +40,11 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     if (!props.hotkeysEnabled) return
     const eventFunc = e => {
       if (e.key === "Enter") {
-        if (props.onFinish) props.onFinish(output)
+        if (props.onNext) {
+          props.onNext(output)
+        } else if (props.onFinish) {
+          props.onFinish(output)
+        }
       }
     }
     window.addEventListener("keydown", eventFunc)
@@ -66,6 +70,8 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     msg.toLowerCase().includes("error")
   )
 
+  const onNext = useEventCallback(() => props.onNext(output))
+  const onPrev = useEventCallback(() => props.onPrev(output))
   const onFinish = useEventCallback(() => {
     if (!isPassingValidation) return
     props.onFinish(output)
@@ -74,6 +80,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   const onClickHeaderItem = useEventCallback(({ name }) => {
     switch (name) {
       case "Done":
+      case "Save":
         onFinish(output)
         return
       default:
@@ -113,8 +120,8 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   return (
     <Container
       titleContent={props.titleContent}
-      onNext={props.onNext}
-      onPrev={props.onPrev}
+      onNext={props.onNext ? onNext : null}
+      onPrev={props.onPrev ? onPrev : null}
       onClickHeaderItem={onClickHeaderItem}
     >
       <div>{annotator}</div>
