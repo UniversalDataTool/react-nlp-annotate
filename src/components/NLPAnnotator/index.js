@@ -29,6 +29,9 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   if (output === null && props.type === "label-sequence") {
     output = props.initialSequence || [{ text: props.document }]
   }
+  if (output === null && props.type === "label-document") {
+    output = props.initialLabel || props.initialLabels
+  }
   if (output === null && props.type === "label-relationships") {
     output = {
       sequence: props.initialSequence,
