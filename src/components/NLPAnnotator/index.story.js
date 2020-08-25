@@ -78,3 +78,34 @@ storiesOf("NLPAnnotator", module)
       onFinish={action("onFinish")}
     />
   ))
+  .add("Relationship Labeler", () => (
+    <NLPAnnotator
+      hotkeysEnabled
+      onChange={action("onChange")}
+      onFinish={action("onFinish")}
+      onNext={action("onNext")}
+      onPrev={action("onPrev")}
+      type="label-relationships"
+      document={`Lorem ipsum dolor sit amet.`}
+      entityLabels={[
+        {
+          id: "noun",
+          displayName: "Noun"
+        },
+        {
+          id: "proper-noun",
+          displayName: "Proper Noun"
+        }
+      ]}
+      relationshipLabels={[
+        {
+          id: "eaten by",
+          displayName: "Eaten By"
+        },
+        {
+          id: "lives in",
+          displayName: "Lives In"
+        }
+      ]}
+    />
+  ))

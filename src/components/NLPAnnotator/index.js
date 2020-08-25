@@ -5,12 +5,19 @@ import React, { useState, useEffect, useMemo } from "react"
 import type { NLPAnnotatorProps } from "../../types"
 import SequenceAnnotator from "../SequenceAnnotator"
 import DocumentLabeler from "../DocumentLabeler"
+import RelationshipAnnotator from "../RelationshipAnnotator"
 import Transcriber from "../Transcriber"
 import colors from "../../colors"
 import Container from "../Container"
 import useEventCallback from "use-event-callback"
 
 const defaultValidator = () => []
+
+const addColors = inputLabels => {
+  return (inputLabels || []).map((label, i) =>
+    label.color ? label : { ...label, color: colors[i % colors.length] }
+  )
+}
 
 export default function NLPAnnotator(props: NLPAnnotatorProps) {
   const validator = props.validator || defaultValidator
@@ -21,6 +28,12 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   }
   if (output === null && props.type === "label-sequence") {
     output = props.initialSequence || [{ text: props.document }]
+  }
+  if (output === null && props.type === "label-relationships") {
+    output = {
+      sequence: props.initialSequence,
+      relationships: props.initialRelationships
+    }
   }
 
   useEffect(() => {
@@ -40,22 +53,18 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
     changeOutput(newOutput)
   }
 
-  let labels = useMemo(() => {
-    let labels = props.labels || []
-    if (!labels.some(l => !l.color)) {
-      labels = labels.map((l, i) => ({
-        ...l,
-        color: colors[i % colors.length]
-      }))
-    }
-    return labels
-  }, [props.labels])
+  let labels = useMemo(() => addColors(props.labels), [props.labels])
+  let entityLabels = useMemo(() => addColors(props.entityLabels), [
+    props.entityLabels
+  ])
+  let relationshipLabels = useMemo(() => addColors(props.relationshipLabels), [
+    props.relationshipLabels
+  ])
 
   const isPassingValidation = !validator(output).some(msg =>
     msg.toLowerCase().includes("error")
   )
 
-  console.log({ output })
   const onFinish = useEventCallback(() => {
     if (!isPassingValidation) return
     console.log("onFinish", output)
@@ -73,6 +82,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   })
 
   let annotator
+  console.log("props.type", props.type)
   switch (props.type) {
     case "label-sequence":
       annotator = (
@@ -86,6 +96,16 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
       break
     case "transcribe":
       annotator = <Transcriber {...props} onChange={onChange} />
+      break
+    case "label-relationships":
+      annotator = (
+        <RelationshipAnnotator
+          {...props}
+          entityLabels={entityLabels}
+          relationshipLabels={relationshipLabels}
+          onChange={onChange}
+        />
+      )
       break
     default:
       annotator = null

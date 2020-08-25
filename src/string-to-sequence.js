@@ -1,7 +1,9 @@
 // @flow
 
-const stringToSequence = (doc: string) => {
-  const sepRe = /[a-zA-ZÀ-ÿ]+/g
+const stringToSequence = (doc: string, sepRe: RegExp = /[a-zA-ZÀ-ÿ]+/g) => {
+  if (typeof sepRe === "string") {
+    sepRe = new RegExp(sepRe)
+  }
   let m
   let indices = [0]
   do {
@@ -15,7 +17,10 @@ const stringToSequence = (doc: string) => {
   return indices
     .filter((_, i) => indices[i] !== indices[i + 1])
     .map((_, i) => ({
-      text: doc.slice(indices[i], indices[i + 1])
+      text: doc.slice(indices[i], indices[i + 1]),
+      textId: Math.random()
+        .toString(36)
+        .slice(-6)
     }))
     .filter(s => s.text.length > 0)
 }

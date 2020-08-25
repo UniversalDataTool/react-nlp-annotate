@@ -2,14 +2,27 @@
 
 type ReactNode = any
 type LabelId = string
+type TextId = string
 
-export type SequenceItem = { text: string, label?: LabelId, color?: string }
+export type SequenceItem = {
+  text: string,
+  label?: LabelId,
+  color?: string,
+  textId?: TextId
+}
 export type Label = {
   parent?: string,
   displayName?: string,
   description?: string,
   color: string,
   id: string
+}
+
+export type Relationship = {
+  from: TextId,
+  to: TextId,
+  label: LabelId,
+  color?: string
 }
 
 export type LabelDocumentProps = {
@@ -25,10 +38,26 @@ export type LabelDocumentProps = {
 export type SequenceAnnotatorProps = {
   type: "label-sequence",
   hotkeysEnabled?: boolean,
+  separatorRegex?: RegExp,
   labels: Array<Label>,
   initialSequence?: Array<SequenceItem>,
   document: string,
   onChange: (sequence: Array<SequenceItem>) => any
+}
+
+export type RelationshipAnnotatorProps = {
+  type: "label-relationships",
+  hotkeysEnabled?: boolean,
+  separatorRegex?: RegExp,
+  entityLabels?: Array<Label>,
+  relationshipLabels?: Array<Label>,
+  initialSequence?: Array<SequenceItem>,
+  initialRelationships?: Array<Relationship>,
+  document: string,
+  onChange: ({
+    sequence: Array<SequenceItem>,
+    relationships: Array<Relationship>
+  }) => any
 }
 
 export type TranscriberProps = {
@@ -45,7 +74,8 @@ export type NLPAnnotatorProps = {
   ...
     | $Exact<SequenceAnnotatorProps>
     | $Exact<LabelDocumentProps>
-    | $Exact<TranscriberProps>,
+    | $Exact<TranscriberProps>
+    | $Exact<RelationshipAnnotatorProps>,
   onNext?: Function,
   onPrev?: Function,
   titleContent?: string | ReactNode,
@@ -69,4 +99,10 @@ export type Output =
       audio: string,
       initialTranscriptionText?: string,
       transcription: string
+    }
+  | {
+      outputType: "label-relationships",
+      document: string,
+      sequence: Array<SequenceItem>,
+      relationships: Array<Relationship>
     }

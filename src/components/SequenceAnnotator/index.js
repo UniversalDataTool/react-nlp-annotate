@@ -14,7 +14,9 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
   const [sequence, changeSequence] = useState(() =>
     props.initialSequence
       ? props.initialSequence.flatMap(entity =>
-          entity.label ? [entity] : stringToSequence(entity.text)
+          entity.label
+            ? [entity]
+            : stringToSequence(entity.text, props.separatorRegex)
         )
       : stringToSequence(props.document)
   )

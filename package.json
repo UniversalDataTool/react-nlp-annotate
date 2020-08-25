@@ -3,8 +3,11 @@
   "version": "0.2.0",
   "homepage": "https://waoai.github.io/react-nlp-annotate/",
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "color-alpha": "^1.0.4",
     "react-hotkeys": "^2.0.0",
     "react-material-workspace-layout": "^0.1.6",
+    "react-use": "^15.3.3",
     "use-event-callback": "^0.1.0"
   },
   "scripts": {
