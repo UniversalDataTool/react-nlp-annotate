@@ -11418,15 +11418,16 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-material-workspace-layout@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/react-material-workspace-layout/-/react-material-workspace-layout-0.1.6.tgz#38412f8ca2e282ebc169d709cc12137351c8c427"
-  integrity sha512-494vMTYgyPfC5MS7opvRcrWvDyYh3cmKP5uWH8LdSF7oDDVGi9WDEqRQK8eFt0GrBSfNk85eHUEnX74B2cjsDg==
+react-material-workspace-layout@^0.1.17:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/react-material-workspace-layout/-/react-material-workspace-layout-0.1.17.tgz#98a997e7d8671444fafe53caa4298b6643d1b9cb"
+  integrity sha512-GY+jFZ14IYKyzIW/KI8/R0Mttb5dTRdYDKdj++YAU/Z3HSQ7kZJ678mv5Nl7X0o081IpMFg5CRiBvvdozUmBtQ==
   dependencies:
     "@material-ui/core" "^4.10.0"
     "@material-ui/icons" "^4.9.1"
     classnames "^2.2.6"
     react "^16.13.1"
+    react-use-dimensions "^1.2.1"
     use-event-callback "^0.1.0"
 
 react-monaco-editor@^0.26.2:
@@ -11582,6 +11583,11 @@ react-universal-interface@^0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/react-universal-interface/-/react-universal-interface-0.6.2.tgz#5e8d438a01729a4dbbcbeeceb0b86be146fe2b3b"
   integrity sha512-dg8yXdcQmvgR13RIlZbTRQOoUrDciFVoSBZILwjE2LFISxZZ8loVJKAkuzswl5js8BHda79bIb2b84ehU8IjXw==
+
+react-use-dimensions@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-use-dimensions/-/react-use-dimensions-1.2.1.tgz#eb1561db7b06c393209d2bffa449931dd93f7870"
+  integrity sha512-XL+Rup9Hosxx3Ap9xpyQMbVwuUa4BSqiOjfBb2zDuGs4uv2FesFV+m8Z/huRx2BNptMd9ARPqFuSNA62zhCozg==
 
 react-use@^15.3.3:
   version "15.3.3"
