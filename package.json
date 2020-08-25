@@ -1,6 +1,6 @@
 {
   "name": "react-nlp-annotate",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://waoai.github.io/react-nlp-annotate/",
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.56",
