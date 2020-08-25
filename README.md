@@ -1,6 +1,6 @@
   # React NLP Annotate
 
-Interface for doing NLP tasks. [Check it out here](https://universaldatatool.github.io/react-nlp-annotate/).
+Interface for doing various NLP tasks.
 
 - Audio transcription
 - Text Labeling (Entity, Classification)
@@ -14,12 +14,14 @@ Interface for doing NLP tasks. [Check it out here](https://universaldatatool.git
 
 ## Installation
 
-`npm install @material-ui/core chroma-js spelling react-nlp-annotate`
+`npm install react-nlp-annotate`
 
 ## Usage
 
+### Document Classification
+
 ```javascript
-import NLPAnnotator from "react-nlp-annotate/components/NLPAnnotator"
+import NLPAnnotator from "react-nlp-annotate"
 
 const MyComponent = () => (
   <NLPAnnotator
