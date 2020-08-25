@@ -50,7 +50,8 @@ export type RelationshipAnnotatorProps = {
   hotkeysEnabled?: boolean,
   separatorRegex?: RegExp,
   relationships: Array<Relationship>,
-  labels?: Array<Label>,
+  entityLabels?: Array<Label>,
+  relationshipLabels?: Array<Label>,
   initialSequence?: Array<SequenceItem>,
   document: string,
   onChange: ({

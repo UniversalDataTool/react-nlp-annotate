@@ -10,7 +10,9 @@ import stringToSequence from "../../string-to-sequence.js"
 import Tooltip from "@material-ui/core/Tooltip"
 import RelationshipArrows from "../RelationshipArrows"
 import colors from "../../colors"
+import ArrowToMouse from "../ArrowToMouse"
 import { useTimeout, useWindowSize } from "react-use"
+import classNames from "classnames"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
   lineHeight: 1.5,
@@ -21,6 +23,7 @@ const Container = styled("div")(({ relationshipsOn }) => ({
 
 const SequenceItem = styled("span")(({ color, relationshipsOn }) => ({
   display: "inline-flex",
+  cursor: "pointer",
   backgroundColor: color,
   color: "#fff",
   padding: 4,
@@ -30,12 +33,20 @@ const SequenceItem = styled("span")(({ color, relationshipsOn }) => ({
   paddingRight: 10,
   borderRadius: 4,
   userSelect: "none",
+  boxSizing: "border-box",
   "&.unlabeled": {
     color: "#333",
     paddingTop: 4,
     paddingBottom: 4,
     paddingLeft: 2,
-    paddingRight: 2
+    paddingRight: 2,
+    ".notSpace:hover": {
+      paddingTop: 2,
+      paddingBottom: 2,
+      paddingLeft: 0,
+      paddingRight: 0,
+      border: `2px dashed #ccc`
+    }
   }
 }))
 
@@ -68,7 +79,7 @@ export default function Document({
   sequence,
   relationships,
   onHighlightedChanged = () => null,
-  onLastPairClickedChanged = () => null,
+  onCreateEmptyRelationship = () => null,
   onSequenceChange = () => null,
   onRelationshipsChange = () => null,
   nothingHighlighted = false,
@@ -77,7 +88,7 @@ export default function Document({
 }: Props) {
   const sequenceItemPositionsRef = useRef({})
   const [mouseDown, changeMouseDown] = useState()
-  const [timeoutCalled, cancelTimeout, resetTimeout] = useTimeout(10) // Force rerender after mounting
+  const [timeoutCalled, cancelTimeout, resetTimeout] = useTimeout(30) // Force rerender after mounting
   const windowSize = useWindowSize()
   useEffect(() => {
     resetTimeout()
@@ -87,10 +98,18 @@ export default function Document({
     changeHighlightedRangeState
   ] = useState([null, null])
 
+  const [firstSequenceItem, setFirstSequenceItem] = useState(null)
+  const [secondSequenceItem, setSecondSequenceItem] = useState(null)
+
+  useEffect(() => {
+    setFirstSequenceItem(null)
+    setSecondSequenceItem(null)
+    changeHighlightedRangeState([null, null])
+    changeMouseDown(false)
+  }, [createRelationshipsMode])
+
   const changeHighlightedRange = ([first, last]) => {
-    if (first !== firstSelected && first !== null && firstSelected !== null) {
-      onLastPairClickedChanged([firstSelected, first])
-    }
+    if (createRelationshipsMode) return
     changeHighlightedRangeState([first, last])
     const highlightedItems = []
     for (let i = Math.min(first, last); i <= Math.max(first, last); i++)
@@ -111,7 +130,15 @@ export default function Document({
     <Container
       relationshipsOn={Boolean(relationships)}
       onMouseDown={() => changeMouseDown(true)}
-      onMouseUp={() => changeMouseDown(false)}
+      onMouseUp={() => {
+        if (createRelationshipsMode && firstSequenceItem) {
+          setFirstSequenceItem(null)
+          if (secondSequenceItem) {
+            setSecondSequenceItem(null)
+          }
+        }
+        changeMouseDown(false)
+      }}
     >
       {sequence.map((seq, i) => (
         <SequenceItem
@@ -128,10 +155,26 @@ export default function Document({
             }
           }}
           relationshipsOn={Boolean(relationships)}
-          onClick={e => e.stopPropagation()}
+          onMouseUp={e => {
+            if (!createRelationshipsMode) return
+            if (!secondSequenceItem) {
+              setFirstSequenceItem(null)
+              setSecondSequenceItem(null)
+              onCreateEmptyRelationship([firstSequenceItem, seq.textId])
+            } else {
+              setFirstSequenceItem(null)
+              setSecondSequenceItem(null)
+            }
+          }}
           onMouseDown={() => {
-            if (seq.label && !createRelationshipsMode) return
-            changeHighlightedRange([i, i])
+            if (createRelationshipsMode) {
+              if (!firstSequenceItem) {
+                setFirstSequenceItem(seq.textId)
+              }
+            } else {
+              if (seq.label) return
+              changeHighlightedRange([i, i])
+            }
           }}
           onMouseMove={() => {
             if (!mouseDown) return
@@ -145,7 +188,10 @@ export default function Document({
               }
             }
           }}
-          className={seq.label ? "label" : "unlabeled"}
+          className={classNames(
+            seq.label ? "label" : "unlabeled",
+            seq.text.trim().length > 0 && "notSpace"
+          )}
           color={
             seq.label
               ? seq.color || colorLabelMap[seq.label] || "#333"
@@ -164,7 +210,7 @@ export default function Document({
           ) : (
             <div>{seq.text}</div>
           )}
-          {seq.label && (
+          {seq.label && !createRelationshipsMode && (
             <LabeledText
               onClick={e => {
                 e.stopPropagation()
@@ -180,6 +226,14 @@ export default function Document({
           )}
         </SequenceItem>
       ))}
+      {firstSequenceItem && !secondSequenceItem && (
+        <ArrowToMouse
+          startAt={
+            ((sequenceItemPositionsRef.current || {})[firstSequenceItem] || {})
+              .offset
+          }
+        />
+      )}
       {relationships && (
         <RelationshipArrows
           onClickArrow={({ label, from, to }) => {

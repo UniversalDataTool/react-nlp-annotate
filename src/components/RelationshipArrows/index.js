@@ -418,6 +418,7 @@ export const RelationshipArrows = ({
       </div>
       {arrows.map((arrow, i) => (
         <ArrowLabel
+          key={i}
           onClick={e => {
             e.stopPropagation()
             onClickArrow(arrow)

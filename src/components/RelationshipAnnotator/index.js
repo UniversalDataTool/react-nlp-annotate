@@ -8,6 +8,12 @@ import LabelSelector from "../LabelSelector"
 import stringToSequence from "../../string-to-sequence.js"
 import mergeSequence from "../../merge-sequence.js"
 import colors from "../../colors"
+import { styled } from "@material-ui/core/styles"
+import ToggleButton from "@material-ui/lab/ToggleButton"
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
+import Box from "@material-ui/core/Box"
+import LowPriorityIcon from "@material-ui/icons/LowPriority"
+import TextFormatIcon from "@material-ui/icons/TextFormat"
 
 const withId = entity =>
   entity.textId
@@ -18,6 +24,7 @@ const withId = entity =>
           .toString(36)
           .slice(-8)
       }
+const LabelSelectorContainer = styled("div")({ display: "flex" })
 
 export default function RelationshipAnnotator(
   props: RelationshipAnnotatorProps
@@ -35,58 +42,45 @@ export default function RelationshipAnnotator(
         )
       : stringToSequence(props.document).map(withId)
   )
+
+  const labels = creatingRelationships
+    ? props.relationshipLabels
+    : props.entityLabels
+
   const colorLabelMap = useMemo(
     () =>
-      props.labels.reduce(
-        (acc, l, i) => ((acc[l.id] = colors[i % colors.length]), acc),
-        {}
-      ),
-    [props.labels]
+      (props.entityLabels || [])
+        .concat(props.relationshipLabels)
+        .reduce(
+          (acc, l, i) => ((acc[l.id] = colors[i % colors.length]), acc),
+          {}
+        ),
+    [props.entityLabels, props.relationshipLabels]
   )
 
   return (
-    <div
-      onMouseMove={e => {
-        lastMousePosition.current = { x: e.target.clientX, y: e.target.clientX }
-      }}
-    >
-      <div>
+    <div>
+      <LabelSelectorContainer>
         <LabelSelector
           hotkeysEnabled={props.hotkeysEnabled}
-          labels={props.labels}
+          labels={labels}
           onSelectLabel={(label: string) => {
             if (!creatingRelationships) {
-              const { color } =
-                props.labels.find(({ id }) => label === id) || {}
+              if (highlightedItems.length === 0) return
               let buildText = ""
-              const newSequence = []
-              for (
-                let itemIndex = 0;
-                itemIndex < sequence.length;
-                itemIndex++
-              ) {
+              let newSequence = [...sequence]
+              for (let itemIndex of highlightedItems) {
                 const item = sequence[itemIndex]
-                if (!highlightedItems.includes(itemIndex) || item.label) {
-                  if (buildText.length > 0) {
-                    newSequence.push({
-                      text: buildText,
-                      color,
-                      label
-                    })
-                    buildText = ""
-                  }
-                  newSequence.push(item)
-                } else {
-                  buildText += item.text
-                }
+                buildText += item.text
+                newSequence[itemIndex] = null
               }
-              if (buildText.length > 0) {
-                newSequence.push({
-                  text: buildText,
-                  color,
-                  label
-                })
+              newSequence[highlightedItems[0]] = {
+                text: buildText,
+                textId: sequence[highlightedItems[0]].textId,
+                color: colorLabelMap[label],
+                label
               }
+              newSequence = newSequence.filter(Boolean)
 
               changeSequence(newSequence)
               props.onChange({
@@ -107,17 +101,38 @@ export default function RelationshipAnnotator(
             }
           }}
         />
-      </div>
+        <Box flexGrow={1} />
+        <ToggleButtonGroup
+          value={creatingRelationships ? "relationships" : "entities"}
+          exclusive
+          onChange={(e, newAlignment) => {
+            if (newAlignment === "relationships") {
+              setCreatingRelationships(true)
+            } else {
+              setCreatingRelationships(false)
+            }
+          }}
+        >
+          <ToggleButton value="relationships">
+            <LowPriorityIcon style={{ transform: "rotate(90deg)" }} />
+          </ToggleButton>
+          {props.entityLabels && (
+            <ToggleButton value="entities">
+              <TextFormatIcon />
+            </ToggleButton>
+          )}
+        </ToggleButtonGroup>
+      </LabelSelectorContainer>
       <div style={{ borderTop: "1px solid #ccc", marginTop: 8, paddingTop: 5 }}>
         <Document
           colorLabelMap={colorLabelMap}
           nothingHighlighted={highlightedItems.length === 0}
-          onLastPairClickedChanged={([first, second]) => {
+          onCreateEmptyRelationship={([first, second]) => {
             setActivePair({
-              from: sequence[first].textId,
-              to: sequence[second].textId,
+              from: first,
+              to: second,
               label: "???",
-              color: "#333"
+              color: "#f00"
             })
           }}
           onRelationshipsChange={relationships =>
@@ -128,11 +143,17 @@ export default function RelationshipAnnotator(
           }
           onSequenceChange={sequence => {
             changeSequence(sequence)
-            props.onChange({ sequence: mergeSequence(sequence) })
+            const allTextIds = new Set(sequence.map(item => item.textId))
+            props.onChange({
+              sequence: mergeSequence(sequence),
+              relationships: relationships.filter(
+                r => allTextIds.has(r.from) && allTextIds.has(r.to)
+              )
+            })
           }}
           sequence={sequence}
           relationships={relationships.concat(
-            activePair !== null ? [activePair] : []
+            activePair !== null && creatingRelationships ? [activePair] : []
           )}
           createRelationshipsMode={creatingRelationships}
         />
