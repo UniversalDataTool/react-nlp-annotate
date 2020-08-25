@@ -49,8 +49,6 @@ export default function RelationshipAnnotator(
       : stringToSequence(props.document).map(withId)
   })
 
-  console.log(sequence, relationships)
-
   const labels = creatingRelationships
     ? props.relationshipLabels
     : props.entityLabels

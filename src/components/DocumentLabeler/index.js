@@ -22,7 +22,6 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
           hotkeysEnabled={props.hotkeysEnabled}
           labels={props.labels}
           onSelectLabel={(labelId: string) => {
-            console.log({ labelId })
             if (props.multipleLabels) {
               changeSelectedLabels(selectedLabels.concat([labelId]))
               props.onChange(selectedLabels.concat([labelId]))
