@@ -1,6 +1,6 @@
 {
   "name": "react-nlp-annotate",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "homepage": "https://universaldatatool.github.io/react-nlp-annotate/",
   "main": "./dist/lib.js",
   "dependencies": {

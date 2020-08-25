@@ -22,7 +22,7 @@ export default ({
           name: "Next",
           onClick: onNext
         },
-        { name: "Done" }
+        { name: "Save" }
       ].filter(Boolean),
     [currentSampleIndex, numberOfSamples]
   )

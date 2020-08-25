@@ -37,6 +37,7 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
   }
 
   useEffect(() => {
+    if (!props.hotkeysEnabled) return
     const eventFunc = e => {
       if (e.key === "Enter") {
         if (props.onFinish) props.onFinish(output)
@@ -67,7 +68,6 @@ export default function NLPAnnotator(props: NLPAnnotatorProps) {
 
   const onFinish = useEventCallback(() => {
     if (!isPassingValidation) return
-    console.log("onFinish", output)
     props.onFinish(output)
   })
 
