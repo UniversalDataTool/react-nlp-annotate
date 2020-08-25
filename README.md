@@ -1,6 +1,6 @@
   # React NLP Annotate
 
-Interface for doing various NLP tasks.
+Interface for doing various NLP tasks. [Here's a code playground](https://codesandbox.io/s/react-nlp-annotate-example-0jwms?file=/src/App.js). Please help this repository by adding documentation and issues!
 
 - Audio transcription
 - Text Labeling (Entity, Classification)
@@ -45,4 +45,41 @@ const MyComponent = () => (
     }}
   />
 )
+```
+
+### Entity Relation Labeling
+
+```javascript
+import React from "react";
+import NLPAnnotator from "react-nlp-annotate";
+
+const labels = [
+  {
+    id: "gryffindor",
+    displayName: "Gryffindor",
+    description: "Daring, strong nerve and chivalry."
+  },
+  {
+    id: "slytherin",
+    displayName: "Slytherin",
+    description: "Cunning and ambitious. Possibly dark wizard."
+  }
+];
+
+export default () => (
+    <NLPAnnotator
+      hotkeysEnabled
+      type="label-relationships"
+      labels={labels}
+      multipleLabels={false}
+      document="Harry was an honest to god good man"
+      onChange={(output) => {
+        console.log("Output is...", output);
+      }}
+      // this is just for label-relationships
+      entityLabels={labels}
+      relationshipLabels={labels}
+    />
+  </div>
+);
 ```
