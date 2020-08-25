@@ -1,7 +1,8 @@
 {
   "name": "react-nlp-annotate",
-  "version": "0.3.1",
-  "homepage": "https://waoai.github.io/react-nlp-annotate/",
+  "version": "0.3.4",
+  "homepage": "https://universaldatatool.github.io/react-nlp-annotate/",
+  "main": "./dist/lib.js",
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.56",
     "color-alpha": "^1.0.4",
@@ -11,7 +12,7 @@
     "use-event-callback": "^0.1.0"
   },
   "scripts": {
-    "build": "rimraf dist && npm run build:babel && cp ./package.json ./dist/package.json",
+    "build": "rimraf dist && npm run build:babel",
     "build:babel": "NODE_ENV=production babel ./src --out-dir=./dist",
     "release": "npm run build && cd dist && npm publish",
     "storybook": "start-storybook -p 9050 -s public",
