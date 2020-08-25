@@ -45,11 +45,12 @@ storiesOf("RelationshipAnnotator", module)
       type="label-relationships"
       document={`Lorem ipsum dolor.`}
       initialSequence={[
-        { label: "noun", text: "Lorem" },
-        { text: " ipsum  " },
-        { label: "proper-noun", text: "dolor." },
-        { text: " this should be broken up into words." }
+        { label: "noun", text: "Lorem", textId: "lorem" },
+        { text: " ipsum  ", textId: "ipsum" },
+        { label: "proper-noun", text: "dolor.", textId: "dolor" },
+        { text: " this should be broken up into words.", textId: "therest" }
       ]}
+      initialRelationships={[{ from: "lorem", to: "ipsum", label: "eaten-by" }]}
       entityLabels={[
         {
           color: colors[0],

@@ -29,20 +29,27 @@ const LabelSelectorContainer = styled("div")({ display: "flex" })
 export default function RelationshipAnnotator(
   props: RelationshipAnnotatorProps
 ) {
-  console.log({ props })
   const [highlightedItems, changeHighlightedItems] = useState([])
-  const [relationships, setRelationships] = useState(props.relationships || [])
+  const [relationships, setRelationships] = useState(
+    props.initialRelationships || []
+  )
   const [activePair, setActivePair] = useState(null)
   const [creatingRelationships, setCreatingRelationships] = useState(true)
-  const [sequence, changeSequence] = useState(() =>
-    props.initialSequence
+  const [sequence, changeSequence] = useState(() => {
+    const textIdsInRelationship = new Set(
+      relationships.flatMap(({ to, from }) => [to, from])
+    )
+    return props.initialSequence
       ? props.initialSequence.flatMap(entity =>
-          entity.label
+          entity.label ||
+          (entity.textId && textIdsInRelationship.has(entity.textId))
             ? [withId(entity)]
             : stringToSequence(entity.text, props.separatorRegex).map(withId)
         )
       : stringToSequence(props.document).map(withId)
-  )
+  })
+
+  console.log(sequence, relationships)
 
   const labels = creatingRelationships
     ? props.relationshipLabels
