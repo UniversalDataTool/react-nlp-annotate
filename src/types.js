@@ -49,10 +49,10 @@ export type RelationshipAnnotatorProps = {
   type: "label-relationships",
   hotkeysEnabled?: boolean,
   separatorRegex?: RegExp,
-  relationships: Array<Relationship>,
   entityLabels?: Array<Label>,
   relationshipLabels?: Array<Label>,
   initialSequence?: Array<SequenceItem>,
+  initialRelationships?: Array<Relationship>,
   document: string,
   onChange: ({
     sequence: Array<SequenceItem>,
@@ -74,7 +74,8 @@ export type NLPAnnotatorProps = {
   ...
     | $Exact<SequenceAnnotatorProps>
     | $Exact<LabelDocumentProps>
-    | $Exact<TranscriberProps>,
+    | $Exact<TranscriberProps>
+    | $Exact<RelationshipAnnotatorProps>,
   onNext?: Function,
   onPrev?: Function,
   titleContent?: string | ReactNode,
@@ -98,4 +99,10 @@ export type Output =
       audio: string,
       initialTranscriptionText?: string,
       transcription: string
+    }
+  | {
+      outputType: "label-relationships",
+      document: string,
+      sequence: Array<SequenceItem>,
+      relationships: Array<Relationship>
     }

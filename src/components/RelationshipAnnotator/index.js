@@ -29,6 +29,7 @@ const LabelSelectorContainer = styled("div")({ display: "flex" })
 export default function RelationshipAnnotator(
   props: RelationshipAnnotatorProps
 ) {
+  console.log({ props })
   const [highlightedItems, changeHighlightedItems] = useState([])
   const [relationships, setRelationships] = useState(props.relationships || [])
   const [activePair, setActivePair] = useState(null)
@@ -52,7 +53,9 @@ export default function RelationshipAnnotator(
       (props.entityLabels || [])
         .concat(props.relationshipLabels)
         .reduce(
-          (acc, l, i) => ((acc[l.id] = colors[i % colors.length]), acc),
+          (acc, l, i) => (
+            (acc[l.id] = l.color || colors[i % colors.length]), acc
+          ),
           {}
         ),
     [props.entityLabels, props.relationshipLabels]

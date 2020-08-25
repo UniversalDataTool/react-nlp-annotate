@@ -16,7 +16,7 @@ import classNames from "classnames"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
   lineHeight: 1.5,
-  marginTop: 64,
+  marginTop: relationshipsOn ? 64 : 0,
   display: "flex",
   flexWrap: "wrap"
 }))
