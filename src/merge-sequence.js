@@ -6,7 +6,7 @@ const mergeSequence = (
   const newSeq = []
   let current = [seq[0]]
   for (let i = 1; i < seq.length; i++) {
-    if (current[0].label === seq[i].label) {
+    if (!current[0].label && !seq[i].label) {
       current.push(seq[i])
     } else {
       newSeq.push({
