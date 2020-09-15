@@ -8,7 +8,7 @@
     "chroma-js": "^2.0.3",
     "color-alpha": "^1.0.4",
     "react-hotkeys": "^2.0.0",
-    "react-material-workspace-layout": "^0.1.17",
+    "react-material-workspace-layout": "^1.0.1",
     "react-select": "^3.0.8",
     "react-use": "^15.3.3",
     "spelling": "^2.0.1",
