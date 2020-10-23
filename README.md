@@ -1,6 +1,6 @@
 # React NLP Annotate
   
-> If you just want to edit NLP data, it's easier to just use the Universal Data Tool (MIT). This library is a module of the Universal Data Tool for use in custom react applications.
+> If you just want to edit NLP data, it's easier to just use the [Universal Data Tool (MIT)](https://github.com/UniversalDataTool/universal-data-tool). This library is a module of the Universal Data Tool for use in custom react applications.
 
 Interface for doing various NLP tasks. [Here's a code playground](https://codesandbox.io/s/react-nlp-annotate-example-0jwms?file=/src/App.js). Please help this repository by adding documentation and issues!
 
