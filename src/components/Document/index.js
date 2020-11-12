@@ -6,13 +6,13 @@ import type {
   Relationship
 } from "../../types"
 import { styled } from "@material-ui/styles"
-import stringToSequence from "../../string-to-sequence.js"
-import Tooltip from "@material-ui/core/Tooltip"
 import RelationshipArrows from "../RelationshipArrows"
 import colors from "../../colors"
 import ArrowToMouse from "../ArrowToMouse"
 import { useTimeout, useWindowSize } from "react-use"
+import SequenceItem from "../SequenceItem"
 import classNames from "classnames"
+import useEventCallback from "use-event-callback"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
   lineHeight: 1.5,
@@ -20,50 +20,6 @@ const Container = styled("div")(({ relationshipsOn }) => ({
   display: "flex",
   flexWrap: "wrap"
 }))
-
-const SequenceItem = styled("span")(({ color, relationshipsOn }) => ({
-  display: "inline-flex",
-  cursor: "pointer",
-  backgroundColor: color,
-  color: "#fff",
-  padding: 4,
-  margin: 4,
-  marginBottom: relationshipsOn ? 64 : 4,
-  paddingLeft: 10,
-  paddingRight: 10,
-  borderRadius: 4,
-  userSelect: "none",
-  boxSizing: "border-box",
-  "&.unlabeled": {
-    color: "#333",
-    paddingTop: 4,
-    paddingBottom: 4,
-    paddingLeft: 2,
-    paddingRight: 2,
-    ".notSpace:hover": {
-      paddingTop: 2,
-      paddingBottom: 2,
-      paddingLeft: 0,
-      paddingRight: 0,
-      border: `2px dashed #ccc`
-    }
-  }
-}))
-
-const LabeledText = styled("div")({
-  display: "inline-flex",
-  cursor: "pointer",
-  alignSelf: "center",
-  fontSize: 11,
-  width: 18,
-  height: 18,
-  alignItems: "center",
-  justifyContent: "center",
-  marginLeft: 4,
-  borderRadius: 9,
-  color: "#fff",
-  backgroundColor: "rgba(0,0,0,0.2)"
-})
 
 type Props = {
   sequence: Array<SequenceItemData>,
@@ -126,6 +82,8 @@ export default function Document({
       highlightedItems.push(i)
   }
 
+  const onRemoveLabel = useEventCallback(sequenceItemIndex => {})
+
   return (
     <Container
       relationshipsOn={Boolean(relationships)}
@@ -142,89 +100,24 @@ export default function Document({
     >
       {sequence.map((seq, i) => (
         <SequenceItem
-          key={seq.textId || i}
-          ref={elm => {
-            if (!elm) return
-            sequenceItemPositionsRef.current[seq.textId] = {
-              offset: {
-                left: elm.offsetLeft,
-                top: elm.offsetTop,
-                width: elm.offsetWidth,
-                height: elm.offsetHeight
-              }
-            }
-          }}
+          {...seq}
+          sequenceItemIndex={i}
+          sequenceItemPositionsRef={sequenceItemPositionsRef}
           relationshipsOn={Boolean(relationships)}
-          onMouseUp={e => {
-            if (!createRelationshipsMode) return
-            if (!secondSequenceItem) {
-              setFirstSequenceItem(null)
-              setSecondSequenceItem(null)
-              onCreateEmptyRelationship([firstSequenceItem, seq.textId])
-            } else {
-              setFirstSequenceItem(null)
-              setSecondSequenceItem(null)
-            }
-          }}
-          onMouseDown={() => {
-            if (createRelationshipsMode) {
-              if (!firstSequenceItem) {
-                setFirstSequenceItem(seq.textId)
-              }
-            } else {
-              if (seq.label) return
-              changeHighlightedRange([i, i])
-            }
-          }}
-          onMouseMove={() => {
-            if (!mouseDown) return
-            if (!createRelationshipsMode) {
-              if (seq.label) return
-              if (i !== lastSelected) {
-                changeHighlightedRange([
-                  firstSelected === null ? i : firstSelected,
-                  i
-                ])
-              }
-            }
-          }}
-          className={classNames(
-            seq.label ? "label" : "unlabeled",
-            seq.text.trim().length > 0 && "notSpace"
-          )}
-          color={
-            seq.label
-              ? seq.color || colorLabelMap[seq.label] || "#333"
-              : !createRelationshipsMode &&
-                seq.text !== " " &&
-                highlightedItems.includes(i)
-              ? "#ccc"
-              : "inherit"
-          }
-          key={i}
-        >
-          {seq.label ? (
-            <Tooltip title={seq.label} placement="bottom">
-              <div>{seq.text}</div>
-            </Tooltip>
-          ) : (
-            <div>{seq.text}</div>
-          )}
-          {seq.label && !createRelationshipsMode && (
-            <LabeledText
-              onClick={e => {
-                e.stopPropagation()
-                onSequenceChange(
-                  sequence
-                    .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
-                    .filter(s => s.text.length > 0)
-                )
-              }}
-            >
-              <span>{"\u2716"}</span>
-            </LabeledText>
-          )}
-        </SequenceItem>
+          createRelationshipsMode={createRelationshipsMode}
+          onChangeFirstSequenceItem={setFirstSequenceItem}
+          onChangeSecondSequenceItem={setSecondSequenceItem}
+          onCreateEmptyRelationship={onCreateEmptyRelationship}
+          onChangeHighlightedRange={changeHighlightedRange}
+          firstSequenceItem={firstSequenceItem}
+          secondSequenceItem={secondSequenceItem}
+          mouseDown={mouseDown}
+          firstSelected={firstSelected}
+          lastSelected={lastSelected}
+          isHighlighted={highlightedItems.includes(i)}
+          onRemoveLabel={onRemoveLabel}
+          color={seq.color || colorLabelMap[seq.label]}
+        />
       ))}
       {firstSequenceItem && !secondSequenceItem && (
         <ArrowToMouse
