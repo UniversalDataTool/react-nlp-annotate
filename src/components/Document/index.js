@@ -117,6 +117,7 @@ export default function Document({
           isHighlighted={highlightedItems.includes(i)}
           onRemoveLabel={onRemoveLabel}
           color={seq.color || colorLabelMap[seq.label]}
+          key={i}
         />
       ))}
       {firstSequenceItem && !secondSequenceItem && (

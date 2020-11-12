@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import classNames from "classnames"
 import { styled, Tooltip } from "@material-ui/core"
 import stringToSequence from "../../string-to-sequence.js"
@@ -155,4 +155,4 @@ export const SequenceItem = ({
   )
 }
 
-export default SequenceItem
+export default memo(SequenceItem)
