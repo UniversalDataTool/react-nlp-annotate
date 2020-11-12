@@ -32,6 +32,7 @@ export type LabelDocumentProps = {
   multipleLabels?: boolean,
   document: string,
   initialLabels?: Array<string>,
+  separatorRegex?: string,
   onChange: (Array<string> | string | null) => any
 }
 
