@@ -18,7 +18,7 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
             ? [entity]
             : stringToSequence(entity.text, props.separatorRegex)
         )
-      : stringToSequence(props.document)
+      : stringToSequence(props.document, props.separatorRegex)
   )
   const colorLabelMap = useMemo(
     () =>
@@ -71,6 +71,7 @@ export default function SequenceAnnotator(props: SequenceAnnotatorProps) {
       </div>
       <div style={{ borderTop: "1px solid #ccc", marginTop: 8, paddingTop: 5 }}>
         <Document
+          separatorRegex={props.separatorRegex}
           colorLabelMap={colorLabelMap}
           nothingHighlighted={highlightedItems.length === 0}
           onHighlightedChanged={highlightedItems =>

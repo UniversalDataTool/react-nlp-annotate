@@ -12,9 +12,10 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
   const [selectedLabels, changeSelectedLabels] = useState(
     props.initialLabels || (props.initialLabel ? [props.initialLabel] : [])
   )
-  const sequence = useMemo(() => stringToSequence(props.document), [
-    props.document
-  ])
+  const sequence = useMemo(
+    () => stringToSequence(props.document, props.separatorRegex),
+    [props.document]
+  )
   return (
     <div>
       <div>
@@ -58,7 +59,11 @@ export default function DocumentLabeler(props: LabelDocumentProps) {
             )
           })}
         </div>
-        <Document nothingHighlighted sequence={sequence} />
+        <Document
+          nothingHighlighted
+          sequence={sequence}
+          separatorRegex={props.separatorRegex}
+        />
       </div>
     </div>
   )
