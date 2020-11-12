@@ -141,11 +141,6 @@ export const SequenceItem = ({
           onClick={e => {
             e.stopPropagation()
             onRemoveLabel(sequenceItemIndex)
-            // onSequenceChange(
-            //   sequence
-            //     .flatMap(s => (s !== seq ? s : stringToSequence(s.text)))
-            //     .filter(s => s.text.length > 0)
-            // )
           }}
         >
           <span>✖</span>

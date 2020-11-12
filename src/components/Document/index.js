@@ -12,6 +12,7 @@ import ArrowToMouse from "../ArrowToMouse"
 import { useTimeout, useWindowSize } from "react-use"
 import SequenceItem from "../SequenceItem"
 import classNames from "classnames"
+import stringToSequence from "../../string-to-sequence"
 import useEventCallback from "use-event-callback"
 
 const Container = styled("div")(({ relationshipsOn }) => ({
@@ -82,7 +83,15 @@ export default function Document({
       highlightedItems.push(i)
   }
 
-  const onRemoveLabel = useEventCallback(sequenceItemIndex => {})
+  const onRemoveLabel = useEventCallback(sequenceItemIndex => {
+    onSequenceChange(
+      sequence
+        .flatMap((s, i) =>
+          i !== sequenceItemIndex ? s : stringToSequence(s.text)
+        )
+        .filter(s => s.text.length > 0)
+    )
+  })
 
   return (
     <Container
