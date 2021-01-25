@@ -2,7 +2,7 @@
 
 const stringToSequence = (
   doc: string,
-  sepRe: RegExp | string = /[a-zA-ZÀ-ÿ]+/g
+  sepRe: RegExp | string = /[0-9a-zA-ZÀ-ÿ]+/g
 ) => {
   if (typeof sepRe === "string") {
     sepRe = new RegExp(sepRe, "g")
