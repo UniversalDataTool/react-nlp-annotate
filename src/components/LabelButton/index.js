@@ -2,10 +2,10 @@
 
 import React, { useMemo } from "react"
 import type { Label as LabelType } from "../../types.js"
-import FolderOpenIcon from "@material-ui/icons/FolderOpen"
+import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import classnames from "classnames"
-import { makeStyles } from "@material-ui/core/styles"
-import Tooltip from "@material-ui/core/Tooltip"
+import { makeStyles } from "@mui/material/styles"
+import Tooltip from "@mui/material/Tooltip"
 
 const useStyles = makeStyles({
   label: {

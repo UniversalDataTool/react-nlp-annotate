@@ -1,9 +1,9 @@
 // @flow
 
 import React, { useEffect, useState } from "react"
-import { makeStyles } from "@material-ui/styles"
+import { makeStyles } from "@mui/styles"
 import { parse as queryString } from "query-string"
-import Button from "@material-ui/core/Button"
+import Button from "@mui/material/Button"
 import axios from "axios"
 import NLPAnnotator from "../NLPAnnotator"
 import set from "lodash/set"

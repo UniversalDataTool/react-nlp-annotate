@@ -16,7 +16,7 @@ prioritized by how far the arrow has traveled.
 */
 
 import React from "react"
-import { styled } from "@material-ui/core/styles"
+import { styled } from "@mui/material/styles"
 
 const X_SEP_DIST = 5
 const Y_SEP_DIST = 16

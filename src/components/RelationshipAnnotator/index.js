@@ -8,12 +8,12 @@ import LabelSelector from "../LabelSelector"
 import stringToSequence from "../../string-to-sequence.js"
 import mergeSequence from "../../merge-sequence.js"
 import colors from "../../colors"
-import { styled } from "@material-ui/core/styles"
-import ToggleButton from "@material-ui/lab/ToggleButton"
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
-import Box from "@material-ui/core/Box"
-import LowPriorityIcon from "@material-ui/icons/LowPriority"
-import TextFormatIcon from "@material-ui/icons/TextFormat"
+import { styled } from "@mui/material/styles"
+import ToggleButton from "@mui/material/ToggleButton"
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+import Box from "@mui/material/Box"
+import LowPriorityIcon from "@mui/icons-material/LowPriority"
+import TextFormatIcon from "@mui/icons-material/TextFormat"
 
 const withId = entity =>
   entity.textId

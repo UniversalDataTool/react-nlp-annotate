@@ -1,8 +1,8 @@
 // @flow
 
 import React from "react"
-import { makeStyles } from "@material-ui/styles"
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
+import { makeStyles } from "@mui/styles"
+import { ThemeProvider, createMuiTheme } from "@mui/material/styles"
 import "./theme.css"
 
 const useStyles = makeStyles({

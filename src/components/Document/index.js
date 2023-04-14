@@ -5,7 +5,7 @@ import type {
   SequenceItem as SequenceItemData,
   Relationship
 } from "../../types"
-import { styled } from "@material-ui/styles"
+import { styled } from "@mui/styles"
 import RelationshipArrows from "../RelationshipArrows"
 import colors from "../../colors"
 import ArrowToMouse from "../ArrowToMouse"

@@ -1,8 +1,8 @@
 // @flow
 
 import React, { useMemo } from "react"
-import Box from "@material-ui/core/Box"
-import Typography from "@material-ui/core/Typography"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import Workspace from "react-material-workspace-layout/Workspace"
 
 export default ({

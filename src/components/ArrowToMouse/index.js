@@ -1,7 +1,7 @@
 // @flow
 
 import React, { useRef } from "react"
-import { styled } from "@material-ui/core/styles"
+import { styled } from "@mui/material/styles"
 import { useMouse } from "react-use"
 
 const Container = styled("div")({

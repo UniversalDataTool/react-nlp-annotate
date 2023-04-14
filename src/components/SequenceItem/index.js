@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import classNames from "classnames"
-import { styled, Tooltip } from "@material-ui/core"
+import { styled, Tooltip } from "@mui/material"
 import stringToSequence from "../../string-to-sequence.js"
 
 const SequenceItemContainer = styled("span")(({ color, relationshipsOn }) => ({

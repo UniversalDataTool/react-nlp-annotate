@@ -5,7 +5,7 @@ import CreatableSelect from "react-select/async-creatable"
 import Spelling from "spelling"
 import enDictionary from "spelling/dictionaries/en_US"
 import chroma from "chroma-js"
-import { green, yellow, red } from "@material-ui/core/colors"
+import { green, yellow, red } from "@mui/material/colors"
 
 const spellChecker = new Spelling(enDictionary)
 

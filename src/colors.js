@@ -1,6 +1,6 @@
 // @flow
 
-import * as colors from "@material-ui/core/colors"
+import * as colors from "@mui/material/colors"
 
 export default Object.keys(colors)
   .filter(c => c !== "common")
